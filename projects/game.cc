@@ -8,6 +8,10 @@
 #include "Resource/GraphicsNode.h"
 #include "render/grid.h"
 #include "Component/CameraComp.h"
+
+#include "Gameobject/CameraObj.h" //testing with the camera componet
+//#include "Component/CameraComponent.h"
+
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
 #include "Input/Input.h"
@@ -25,6 +29,10 @@ GraphicsNode plane;
 //std::vector<GraphicsNode> flight;
 
 Camera camera;
+
+CameraObj cam;
+
+
 
 std::vector<PointLight> lights;
 
@@ -177,6 +185,12 @@ GameApp::Open()
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
 
+		//testing
+		cam.SetCamPos(vec3(-2, 2, -2));
+		cam.GetView();
+
+		//gobj_Camera.AddComponent(CameraComp());
+
 		
 		ShaderResource::LinkProgram(mainShader.program, mainShader.vertexShader, plane.mesh->primitives[0].material.shader);
 		printf("Vertex errors:\n");
@@ -276,7 +290,8 @@ GameApp::Run()
 			//monkey.RotateX(manager->mouse.dy/100);
 		}
 
-
+		//testing
+		//plane.DrawGameObj(cam); //works with no error (no plane render & lighting) 
 
 		plane.Draw(camera);
 		//monkey.Draw(camera);

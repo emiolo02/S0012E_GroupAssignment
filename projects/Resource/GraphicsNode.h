@@ -3,6 +3,9 @@
 #include "Meshresource.h"
 #include "../Component/CameraComp.h"
 
+//testing
+#include "../Gameobject/CameraObj.h"
+
 
 class GraphicsNode
 {
@@ -19,6 +22,9 @@ public:
 		/*TextureResource* texture*/);
 
 	void Draw(Camera cam);
+	
+	//Test
+	void DrawGameObj(CameraObj gObj);
 
 	void RotateX(float rad);
 	void RotateY(float rad);

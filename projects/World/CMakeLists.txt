@@ -3,11 +3,10 @@
 #--------------------------------------------------------------------------
 
 ADD_LIBRARY(
-    Gameobject
-    GameObj.h
-    CameraObj
-    Player.cc
+    World
+    Dummy.cc
+    Scene.h
 )
 
-TARGET_LINK_LIBRARIES(Gameobject core render)
-ADD_DEPENDENCIES(Gameobject core render)
+TARGET_LINK_LIBRARIES(World core render)
+ADD_DEPENDENCIES(World core render)
