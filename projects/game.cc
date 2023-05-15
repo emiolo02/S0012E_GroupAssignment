@@ -10,6 +10,8 @@
 #include "Component/CameraComp.h"
 
 #include "Gameobject/CameraObj.h" //testing with the camera componet
+#include "Gameobject/Player.h" //testing with the camera componet
+
 //#include "Component/CameraComponent.h"
 
 #include "Light/PointLight.h"
@@ -18,8 +20,8 @@
 
 #include <chrono>
 
-ShaderResource mainShader;
-ShaderResource normalShader;
+std::shared_ptr<ShaderResource> mainShader;
+//ShaderResource normalShader;
 
 GraphicsNode plane;
 //GraphicsNode monkey;
@@ -30,8 +32,10 @@ GraphicsNode plane;
 
 Camera camera;
 
-CameraObj cam;
+//testing
+Player p1;
 
+Player p2(vec3(1,1,1));
 
 
 std::vector<PointLight> lights;
@@ -94,7 +98,7 @@ GameApp::Open()
 
 		glClearColor(0.1f,0.1f,0.1f,0.1f);
 
-		mainShader = ShaderResource("../projects/vert.glsl");
+		mainShader = std::make_shared<ShaderResource>("../projects/vert.glsl");
 		//normalShader = ShaderResource("../projects/GLTFnormal/code/vertNormal.glsl");
 
 		// Light 0
@@ -106,22 +110,28 @@ GameApp::Open()
 		// Sun
 		sun = Sun(vec3(1, 1, 1), vec3(1, -1, 0), 1);
 
+		BlinnPhongMaterial material;
+		material.LoadShader(mainShader->program);
 		// Plane
-		plane.SetResources(
-			std::make_shared<ShaderResource>(mainShader),
-			std::make_shared<MeshResource>(MeshResource::LoadOBJ("../assets/plane.obj")));
+		//plane.SetResources(
+		//	std::make_shared<ShaderResource>(mainShader),
+		//	std::make_shared<MeshResource>(MeshResource::LoadOBJ("../assets/plane.obj")));
 
-		//plane.shader->Bind(, "../projects/LightOBJ/code/frag.glsl");
+		////plane.shader->Bind(, "../projects/LightOBJ/code/frag.glsl");
 
 
-		BlinnPhongMaterial planeMat;
-		planeMat.LoadShader(mainShader.program);
-		planeMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), "../assets/smile.png");
-		
-		plane.mesh->primitives[0].material = planeMat;
+		//BlinnPhongMaterial planeMat;
+		//planeMat.LoadShader(mainShader.program);
+		//planeMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), "../assets/smile.png");
+		//
+		//plane.mesh->primitives[0].material = planeMat;
 
-		plane.mesh->Upload();
-		
+		//plane.mesh->Upload();
+
+		//TEST player render
+		p1.Init(mainShader,material);
+		p2.Init(mainShader,material);
+
 		// Monkey
 		/*
 		monkey.shader = plane.shader;
@@ -184,20 +194,16 @@ GameApp::Open()
 		// Camera
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
-
-		//testing
-		cam.SetCamPos(vec3(-2, 2, -2));
-		cam.GetView();
-
-		//gobj_Camera.AddComponent(CameraComp());
-
 		
-		ShaderResource::LinkProgram(mainShader.program, mainShader.vertexShader, plane.mesh->primitives[0].material.shader);
-		printf("Vertex errors:\n");
-		ShaderResource::ErrorLog(mainShader.vertexShader);
-		printf("Fragment errors:\n");
-		ShaderResource::ErrorLog(plane.mesh->primitives[0].material.shader);
+		for (auto& gm : Scene::Get().GetGMVec())
+		{
+			ShaderResource::LinkProgram(mainShader->program, mainShader->vertexShader, gm->renderableOBJ.mesh->primitives[0].material.shader);
+		}
 
+		printf("Vertex errors:\n");
+		ShaderResource::ErrorLog(mainShader->vertexShader);
+		printf("Fragment errors:\n");
+		ShaderResource::ErrorLog(p1.renderableOBJ.mesh->primitives[0].material.shader);
 		//ShaderResource::LinkProgram(normalShader.program, normalShader.vertexShader, avocado.mesh->primitives[0].material.shader);
 		//printf("Vertex errors:\n");
 		//ShaderResource::ErrorLog(normalShader.vertexShader);
@@ -290,10 +296,15 @@ GameApp::Run()
 			//monkey.RotateX(manager->mouse.dy/100);
 		}
 
-		//testing
-		//plane.DrawGameObj(cam); //works with no error (no plane render & lighting) 
+		//Testing render player out
+		//p1.Draw(camera);
 
-		plane.Draw(camera);
+		for(auto& gm : Scene::Get().GetGMVec())
+		{
+			gm->renderableOBJ.Draw(camera);
+		}
+
+		//plane.Draw(camera);
 		//monkey.Draw(camera);
 		//cube.Draw(camera);
 		//avocado.Draw(camera);

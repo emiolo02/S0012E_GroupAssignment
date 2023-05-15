@@ -44,33 +44,6 @@ void GraphicsNode::Draw(Camera cam)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-//Testing with rendering gameobj camera
-void GraphicsNode::DrawGameObj(CameraObj gObj)
-{
-	glUseProgram(this->shader->program);
-
-	this->mesh->Bind();
-
-	for (auto& primitive : this->mesh->primitives)
-		primitive.material.Apply(this->shader->program);
-
-	this->model = this->translation * this->rotation * this->scale;
-
-	ShaderResource::Matrix4fv("model", this->model, this->shader->program);
-	ShaderResource::Matrix4fv("view", gObj.view, this->shader->program);
-	ShaderResource::Matrix4fv("projection", gObj.projection, this->shader->program);
-	ShaderResource::Vector3f("cameraPos", gObj.position, this->shader->program);
-	for (auto& primitive : this->mesh->primitives)
-		primitive.material.texture->BindTexture();
-
-	glDrawElements(GL_TRIANGLES, this->mesh->ind.size(), GL_UNSIGNED_INT, NULL);
-
-	for (auto& primitive : this->mesh->primitives)
-		primitive.material.texture->UnbindTexture();
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
 void
 GraphicsNode::RotateX(float rad)
 {

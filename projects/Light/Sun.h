@@ -13,6 +13,6 @@ public:
 
 	Sun();
 	Sun(vec3 color, vec3 direction, float intensity);
-	void Update(ShaderResource shader);
-	void Disable(ShaderResource shader);
+	void Update(std::shared_ptr<ShaderResource> shader);
+	void Disable(std::shared_ptr<ShaderResource> shader);
 };

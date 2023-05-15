@@ -22,9 +22,6 @@ public:
 		/*TextureResource* texture*/);
 
 	void Draw(Camera cam);
-	
-	//Test
-	void DrawGameObj(CameraObj gObj);
 
 	void RotateX(float rad);
 	void RotateY(float rad);
