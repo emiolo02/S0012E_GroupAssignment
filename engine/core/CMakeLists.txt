@@ -5,7 +5,6 @@
 SET(files_core
 	stb_image.h
 	stb_image.cc
-	gltf.h
 	app.h
 	app.cc
 	nlohmann/json.hpp
