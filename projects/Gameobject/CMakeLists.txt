@@ -5,7 +5,6 @@
 ADD_LIBRARY(
     Gameobject
     GameObj.h
-    CameraObj
     PLayer.h
     Player.cc
 )

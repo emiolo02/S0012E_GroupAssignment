@@ -3,9 +3,6 @@
 #include "Meshresource.h"
 #include "../Component/CameraComp.h"
 
-//testing
-#include "../Gameobject/CameraObj.h"
-
 
 class GraphicsNode
 {

@@ -8,8 +8,6 @@
 #include "Resource/GraphicsNode.h"
 #include "render/grid.h"
 #include "Component/CameraComp.h"
-
-#include "Gameobject/CameraObj.h" //testing with the camera componet
 #include "Gameobject/Player.h" //testing with the camera componet
 
 //#include "Component/CameraComponent.h"
