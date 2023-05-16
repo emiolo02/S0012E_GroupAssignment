@@ -15,6 +15,6 @@ public:
 
 	PointLight();
 	PointLight(vec3 pos, vec3 color, float intensity, int index);
-	void Update(ShaderResource shader);
-	void Disable(ShaderResource shader);
+	void Update(std::shared_ptr<ShaderResource> shader);
+	void Disable(std::shared_ptr<ShaderResource> shader);
 };

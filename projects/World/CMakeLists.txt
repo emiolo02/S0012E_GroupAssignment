@@ -3,12 +3,10 @@
 #--------------------------------------------------------------------------
 
 ADD_LIBRARY(
-    Input
-    Input.h
-    GamepadInput.h
-    key_1.h
-    key_1.cc
+    World
+    Dummy.cc
+    Scene.h
 )
 
-TARGET_LINK_LIBRARIES(Input core render)
-ADD_DEPENDENCIES(Input core render)
+TARGET_LINK_LIBRARIES(World core render)
+ADD_DEPENDENCIES(World core render)

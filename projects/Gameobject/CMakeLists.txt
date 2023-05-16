@@ -4,6 +4,9 @@
 
 ADD_LIBRARY(
     Gameobject
+    GameObj.h
+    PLayer.h
+    Player.cc
 )
 
 TARGET_LINK_LIBRARIES(Gameobject core render)

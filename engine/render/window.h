@@ -54,6 +54,8 @@ public:
 	/// set mouse scroll function callback
 	void SetMouseScrollFunction(const std::function<void(float64, float64)>& func);
 
+	void JoystickConnected(const std::function<void(int, int)>& func);
+
 	/// set optional UI render function
 	void SetUiRender(const std::function<void()>& func);
 private:
@@ -90,6 +92,8 @@ private:
 	std::function<void(float64, float64)> mouseScrollCallback;
 	/// function for ui rendering callback
 	std::function<void()> uiFunc;
+
+	std::function<void(int, int)> joystickCallback;
 	
 	int32 width;
 	int32 height;
@@ -187,6 +191,12 @@ inline void
 Window::SetMouseScrollFunction(const std::function<void(float64, float64)>& func)
 {
 	this->mouseScrollCallback = func;
+}
+
+inline void
+Window::JoystickConnected(const std::function<void(int, int)>& func)
+{
+	this->joystickCallback = func;
 }
 
 //------------------------------------------------------------------------------

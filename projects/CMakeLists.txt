@@ -5,10 +5,11 @@
 PROJECT(S0012E_Group_Engine)
 
 ADD_SUBDIRECTORY(Component)
-#ADD_SUBDIRECTORY(Gameobject)
+ADD_SUBDIRECTORY(Gameobject)
 ADD_SUBDIRECTORY(Input)
 ADD_SUBDIRECTORY(Light)
 ADD_SUBDIRECTORY(Resource)
+ADD_SUBDIRECTORY(World)
 
 FILE(GLOB root_headers *.h)
 FILE(GLOB root_sources *.cc)
@@ -19,7 +20,7 @@ SOURCE_GROUP("S0012E_Group_Engine" FILES ${files_example})
 
 
 ADD_EXECUTABLE(S0012E_Group_Engine ${files_example})
-TARGET_LINK_LIBRARIES(S0012E_Group_Engine core render Component Input Light Resource)
+TARGET_LINK_LIBRARIES(S0012E_Group_Engine core render Component Gameobject Input Light Resource World  )
 ADD_DEPENDENCIES(S0012E_Group_Engine core render)
 
 if (MSVC)
