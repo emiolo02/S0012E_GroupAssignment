@@ -2,8 +2,6 @@
 
 #include "GameObj.h"
 
-#include "../Input/Input.h"
-
 class Player : public GameObj
 {
 	mat4 transform;

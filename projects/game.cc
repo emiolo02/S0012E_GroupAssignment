@@ -36,6 +36,8 @@ Player p1;
 Player p2(vec3(1,1,1));
 
 
+
+
 std::vector<PointLight> lights;
 
 Sun sun;
@@ -88,6 +90,15 @@ GameApp::Open()
 	window->SetMousePressFunction([this](int32 button, int32 action, int32)
 	{
 			manager->HandleMouseButton(button, action);
+	});
+
+	window->JoystickConnected([this](int jid, int action) //callback not working
+	{
+		if (action == GLFW_CONNECTED)
+			std::cout << "Joystick Connected" << std::endl;
+
+		else if (action == GLFW_DISCONNECTED)
+			std::cout << "Joystick disconnected" << std::endl;
 	});
 
 	if (this->window->Open())
@@ -241,6 +252,10 @@ GameApp::Run()
 
 	while (this->window->IsOpen())
 	{
+		//test joystick
+		//Gamepad logic
+		manager->gamepad.Update();
+
 		auto time1 = std::chrono::steady_clock::now();
 
 		manager->BeginFrame();

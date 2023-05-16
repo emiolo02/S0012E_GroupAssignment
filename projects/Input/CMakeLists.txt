@@ -5,6 +5,7 @@
 ADD_LIBRARY(
     Input
     Input.h
+    GamepadInput.h
     key_1.h
     key_1.cc
 )
