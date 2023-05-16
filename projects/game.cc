@@ -6,7 +6,7 @@
 #include "config.h"
 #include "game.h"
 #include "Resource/GraphicsNode.h"
-#include "render/grid.h"
+//#include "render/grid.h"
 #include "Component/CameraComp.h"
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -320,7 +320,8 @@ GameApp::Run()
 		auto time2 = std::chrono::steady_clock::now();
 
 		int frameTime = std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count();
-		//std::cout << frameTime << " us" << std::endl;
+		//std::cout << frameTime/1000 << " ms" << std::endl;
+		//std::cout << 1000000/frameTime << " fps" << std::endl;
 #ifdef CI_TEST
 		// if we're running CI, we want to return and exit the application after one frame
 		// break the loop and hopefully exit gracefully

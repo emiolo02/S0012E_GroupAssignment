@@ -1,4 +1,6 @@
-#version 460 core
+#version 300 es
+
+precision highp float;
 
 in vec3 outPosition;
 in vec2 outTexCoord;
@@ -43,7 +45,7 @@ vec3 CalcSun(Sun sun, vec3 normal, vec3 fragPos)
 	vec3 ambientLight = vec3(0.1f, 0.1f, 0.1f);
 	
 	// Diffuse
-	vec3 diffuse = sun.color * clamp(dot(normalize(-sun.direction), normal), 0, 1) * sun.intensity;
+	vec3 diffuse = sun.color * clamp(dot(normalize(-sun.direction), normal), 0.0, 1.0) * sun.intensity;
 
 	return (ambientLight * material.ambient + diffuse * material.diffuse);
 }
@@ -55,7 +57,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 camPos)
 	
 	// Diffuse
 	vec3 dirToLight = normalize(light.position - fragPos);
-	vec3 diffuse = light.color * clamp(dot(dirToLight, normal), 0, 1);
+	vec3 diffuse = light.color * clamp(dot(dirToLight, normal), 0.0, 1.0);
 	float distance = length(light.position - fragPos);
 	diffuse = diffuse * (1.0 / (1.0 + (0.01 * distance))) * light.intensity;
 
@@ -64,7 +66,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 camPos)
 	vec3 lightDir = normalize(light.position - fragPos);
 	vec3 viewDir = normalize(camPos - fragPos);
 	vec3 halfWay = normalize(lightDir + viewDir);
-	float specularConstant = pow(max(dot(normal, halfWay), 0), 20);
+	float specularConstant = pow(max(dot(normal, halfWay), 0.0), 20.0);
 	vec3 highlight = light.color * specularConstant;
 
 	return (ambientLight * material.ambient + diffuse * material.diffuse + highlight * material.specular);

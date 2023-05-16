@@ -1,6 +1,6 @@
 #pragma once
 #include "ShaderResource.h"
-#include "Meshresource.h"
+#include "MeshResource.h"
 #include "../Component/CameraComp.h"
 
 
