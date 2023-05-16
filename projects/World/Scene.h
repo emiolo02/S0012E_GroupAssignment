@@ -6,21 +6,30 @@ class GameObj; //Forward declare
 //Singleton
 class Scene
 {
-	static Scene instance; //declare 
-	std::vector<GameObj*> gmObjPlaceholder; //GameOBJ Placeholder //Keep track of all the object in the game
-
-
 public:
+	
+	static Scene* Instance() 
+	{ 
+		static Scene instance;
+		return &instance; 
+	}
+
+	void AddObj(GameObj* gm) 
+	{ 
+		gameObjects.push_back(gm); 
+	}
+
+	std::vector<GameObj*> GetGameObjVec()
+	{
+		return gameObjects;
+	}
+
+private:
+	static Scene* instance; //declare 
+	std::vector<GameObj*> gameObjects; //GameOBJ Placeholder //Keep track of all the object in the game
 	Scene() {}
 	~Scene() {}
-	
-	static Scene& Get() { return instance; }
-	std::vector<GameObj*> GetGMVec() { return Get().gmObjPlaceholder; }
-
-	void AddObj(GameObj* gm) { instance.gmObjPlaceholder.push_back(gm); }
 };
-
-Scene Scene::instance; //Define the instance
 
 //only store all the gameobject in the world (list)
 //NOTE: might need reference to the camera

@@ -47,3 +47,11 @@ Camera::Orbit(float speed, float height, float radius, float time)
 
 	this->view = lookat(this->position, vec3(0, 0, 0), this->up);
 }
+
+void 
+Camera::Follow(vec3 target, float dt)
+{
+	this->position = Lerp(this->position, target + followOffset, dt*5);
+
+	this->view = lookat(this->position, target, this->up);
+}

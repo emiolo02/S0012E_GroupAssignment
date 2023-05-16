@@ -23,6 +23,11 @@ public:
 	void RotateX(float rad);
 	void RotateY(float rad);
 	void RotateZ(float rad);
+
+	void SetRotationX(float deg);
+	void SetRotationY(float deg);
+	void SetRotationZ(float deg);
+
 	void RotateAxis(vec3 v, float rad);
 
 	void Translate(const vec3& v);
