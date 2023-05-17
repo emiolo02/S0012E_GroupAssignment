@@ -120,10 +120,9 @@ GameApp::Open()
 		{
 			for (int y = 0; y < 10; y++)
 			{
-				StaticObj* groundTile = new StaticObj(vec3(-x<<1, 0, y<<1));
+				StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
 				groundTile->Init(
-					"../assets/plane.obj",
-					"../assets/dbgGround.png",
+					"../assets/Kenney/grass.obj",
 					mainShader,
 					material
 				);

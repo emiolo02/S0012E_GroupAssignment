@@ -55,7 +55,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 camPos)
 	
 	// Diffuse
 	vec3 dirToLight = normalize(light.position - fragPos);
-	vec3 diffuse = light.color * clamp(dot(dirToLight, normal), 0, 1);
+	vec3 diffuse = light.color * clamp(dot(dirToLight, normal), 0.0f, 1.0f);
 	float distance = length(light.position - fragPos);
 	diffuse = diffuse * (1.0 / (1.0 + (0.01 * distance))) * light.intensity;
 
@@ -64,7 +64,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 camPos)
 	vec3 lightDir = normalize(light.position - fragPos);
 	vec3 viewDir = normalize(camPos - fragPos);
 	vec3 halfWay = normalize(lightDir + viewDir);
-	float specularConstant = pow(max(dot(normal, halfWay), 0), 20);
+	float specularConstant = pow(max(dot(normal, halfWay), 0.0f), 20.0f);
 	vec3 highlight = light.color * specularConstant;
 
 	return (ambientLight * material.ambient + diffuse * material.diffuse + highlight * material.specular);
@@ -73,11 +73,11 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 camPos)
 void main()
 {
 	vec3 lights = vec3(0);
-
+	vec3 norm = normalize(outNormal);
 	for (int i = 0; i < POINT_LIGHTS; i++)
-		lights += CalcPointLight(pointLights[i], outNormal, outPosition, cameraPos);
+		lights += CalcPointLight(pointLights[i], norm, outPosition, cameraPos);
 
-	lights += CalcSun(sun, outNormal, outPosition);
+	lights += CalcSun(sun, norm, outPosition);
 
 	color = texture(u_texture, outTexCoord) * vec4(lights, 1);
 };

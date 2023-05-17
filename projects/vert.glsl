@@ -17,9 +17,9 @@ uniform vec4 u_position;
 
 void main()
 {
-	outPosition = vec4(model * vec4(position, 1)).xyz;
+	outPosition = vec3(model * vec4(position, 1.0f));
 	outTexCoord = texCoord;
-	outNormal = vec4(model * vec4(normal, 1)).xyz; 
+	outNormal = normal; 
 
 	gl_Position = projection * view * model * vec4(position, 1);
 };

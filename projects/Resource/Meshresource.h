@@ -19,6 +19,7 @@ public:
 	static MeshResource CreateCube(float width, float height, float depth);
 	static MeshResource CreateSphere(float radius, int resolution);
 	static MeshResource LoadOBJ(std::string path);
+	static MeshResource LoadOBJ(std::string path, std::string& outTexPath);
 
 	void Upload();
 	void UploadGLTF(GLTFinfo info);
