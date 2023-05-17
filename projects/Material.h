@@ -2,6 +2,7 @@
 
 #include "Resource/TextureResource.h"
 #include "Resource/ShaderResource.h"
+#include <memory>
 
 class Material
 {

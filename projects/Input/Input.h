@@ -1,5 +1,6 @@
 #pragma once
 #include "key_1.h"
+#include "GamepadInput.h"
 
 namespace Input
 {
@@ -36,6 +37,7 @@ namespace Input
 
         Keyboard keyboard;
         Mouse mouse;
+        Gamepad gamepad;
 
         void BeginFrame()
         {

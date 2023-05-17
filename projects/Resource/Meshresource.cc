@@ -561,30 +561,30 @@ void MeshResource::Upload()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void MeshResource::UploadGLTF(GLTFinfo info)
-{
-	for (int i = 0; i < this->primitives.size(); i++)
-	{
-		this->primitives[i].vertices = info.primitives[i].vertices;
-		this->ind = info.indices;
-
-		this->primitives[i].material.ambient = vec3(1, 1, 1);
-		this->primitives[i].material.diffuse = vec3(1, 1, 1);
-		this->primitives[i].material.specular = vec3(1, 1, 1);
-		this->primitives[i].material.texture = std::make_shared<TextureResource>();
-		for (int j = 0; j < info.imageInfos.size(); j++)
-		{
-			if (!info.imageInfos[j].isEmbedded)
-			{
-				int index = info.imageInfos[j].type;
-
-				if (index >= 0)
-					this->primitives[i].material.texture->LoadFromFile(info.imageInfos[j].FilePath.c_str(), index);
-			}
-		}
-	}
-	Upload();
-}
+//void MeshResource::UploadGLTF(GLTFinfo info)
+//{
+//	for (int i = 0; i < this->primitives.size(); i++)
+//	{
+//		this->primitives[i].vertices = info.primitives[i].vertices;
+//		this->ind = info.indices;
+//
+//		this->primitives[i].material.ambient = vec3(1, 1, 1);
+//		this->primitives[i].material.diffuse = vec3(1, 1, 1);
+//		this->primitives[i].material.specular = vec3(1, 1, 1);
+//		this->primitives[i].material.texture = std::make_shared<TextureResource>();
+//		for (int j = 0; j < info.imageInfos.size(); j++)
+//		{
+//			if (!info.imageInfos[j].isEmbedded)
+//			{
+//				int index = info.imageInfos[j].type;
+//
+//				if (index >= 0)
+//					this->primitives[i].material.texture->LoadFromFile(info.imageInfos[j].FilePath.c_str(), index);
+//			}
+//		}
+//	}
+//	Upload();
+//}
 
 void MeshResource::Bind()
 {

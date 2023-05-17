@@ -6,7 +6,7 @@
 #include "config.h"
 #include "game.h"
 #include "Resource/GraphicsNode.h"
-#include "render/grid.h"
+//#include "render/grid.h"
 #include "Component/CameraComp.h"
 #include "Gameobject/Player.h" //testing with the camera componet
 #include "Gameobject/StaticObj.h"
@@ -33,6 +33,8 @@ Camera camera;
 
 //testing
 Player p1(vec3(0, 1, 0));
+
+
 
 
 std::vector<PointLight> lights;
@@ -86,6 +88,15 @@ GameApp::Open()
 	window->SetMousePressFunction([this](int32 button, int32 action, int32)
 	{
 			manager->HandleMouseButton(button, action);
+	});
+
+	window->JoystickConnected([this](int jid, int action) //callback not working
+	{
+		if (action == GLFW_CONNECTED)
+			std::cout << "Joystick Connected" << std::endl;
+
+		else if (action == GLFW_DISCONNECTED)
+			std::cout << "Joystick disconnected" << std::endl;
 	});
 
 	if (this->window->Open())
@@ -179,6 +190,10 @@ GameApp::Run()
 
 	while (this->window->IsOpen())
 	{
+		//test joystick
+		//Gamepad logic
+		manager->gamepad.Update();
+
 		auto time1 = std::chrono::steady_clock::now();
 
 		manager->BeginFrame();
@@ -266,7 +281,6 @@ GameApp::Run()
 		this->window->SwapBuffers();
 
 		auto time2 = std::chrono::steady_clock::now();
-
 		deltaSeconds = (float)std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count()/1000000;
 		//std::cout << frameTime/1000 << " ms" << std::endl;
 		//std::cout << 1000000/frameTime << " fps" << std::endl;
