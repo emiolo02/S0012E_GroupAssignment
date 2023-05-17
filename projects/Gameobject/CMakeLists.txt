@@ -9,6 +9,8 @@ ADD_LIBRARY(
     Player.cc
     StaticObj.h
     StaticObj.cc
+    Camera.h
+    Camera.cc
 )
 
 TARGET_LINK_LIBRARIES(Gameobject core render)

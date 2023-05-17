@@ -9,7 +9,7 @@
 //#include "../Component/Component.h"
 
 #include "../Resource/GraphicsNode.h"
-#include "../Component/CameraComp.h"
+#include "../Gameobject/Camera.h"
 #include "../World/Scene.h"
 
 //include all component h file here

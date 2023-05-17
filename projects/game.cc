@@ -6,28 +6,21 @@
 #include "config.h"
 #include "game.h"
 #include "Resource/GraphicsNode.h"
-//#include "render/grid.h"
-#include "Component/CameraComp.h"
-#include "Gameobject/Player.h" //testing with the camera componet
-#include "Gameobject/StaticObj.h"
 
-//#include "Component/CameraComponent.h"
+#include "Gameobject/Camera.h"
+#include "Gameobject/Player.h" 
+#include "Gameobject/StaticObj.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
+
 #include "Input/Input.h"
 
 #include <chrono>
 
 std::shared_ptr<ShaderResource> mainShader;
-//ShaderResource normalShader;
 
 GraphicsNode plane;
-//GraphicsNode monkey;
-//GraphicsNode cube;
-//GraphicsNode avocado;
-//GraphicsNode helmet;
-//std::vector<GraphicsNode> flight;
 
 Camera camera;
 

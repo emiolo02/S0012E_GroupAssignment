@@ -1,7 +1,7 @@
 #pragma once
 #include "ShaderResource.h"
 #include "MeshResource.h"
-#include "../Component/CameraComp.h"
+#include "../Gameobject/Camera.h"
 
 
 class GraphicsNode
