@@ -272,7 +272,7 @@ MeshResource::LoadOBJ(std::string path)
 
 		if (prefix[0] != '#')
 		{
-			
+
 			if (prefix == "v ")
 			{
 				std::vector<std::string> out;
@@ -289,7 +289,7 @@ MeshResource::LoadOBJ(std::string path)
 			if (prefix == "vt")
 			{
 				std::vector<std::string> out;
-				
+
 				split(line, ' ', out);
 				vec2 UV = vec2(std::stof(out[1]), std::stof(out[2]));
 
@@ -310,6 +310,169 @@ MeshResource::LoadOBJ(std::string path)
 			}
 
 			if (prefix == "f ")
+			{
+				std::vector<std::string> out;
+
+				split(line, ' ', out);
+
+				for (int i = 1; i < 4; i++)
+				{
+					std::vector<std::string> out1; //splits indicies
+					split(out[i], '/', out1);
+					indPos.push_back((GLuint)std::stoi(out1[0]) - 1);
+					indUV.push_back((GLuint)std::stoi(out1[1]) - 1);
+					indNor.push_back((GLuint)std::stoi(out1[2]) - 1);
+				}
+			}
+		}
+	}
+
+	std::vector<vertex> vertices;
+	vertices.resize(indPos.size());
+
+	for (int i = 0; i < indPos.size(); ++i)
+	{
+		vertices[i].position = positions[indPos[i]];
+		vertices[i].UV = UVs[indUV[i]];
+		vertices[i].normal = normals[indNor[i]];
+	}
+
+	bool found = false;
+	for (int i = 0; i < indPos.size(); i++)
+	{
+		found = false;
+		for (int j = 0; j < mesh.primitives[0].vertices.size(); j++)
+		{
+			if (vertices[i] == mesh.primitives[0].vertices[j])
+			{
+				mesh.ind.push_back(j);
+				found = true;
+			}
+		}
+		if (!found)
+		{
+			mesh.primitives[0].vertices.push_back(vertices[i]);
+			mesh.ind.push_back(mesh.primitives[0].vertices.size() - 1);
+		}
+	}
+
+	return mesh;
+}
+
+std::string GetTexPath(std::string mtlPath)
+{
+	std::ifstream stream(mtlPath);
+	std::string line;
+
+	if (stream.good() == false)
+	{
+		std::cout << "Could not find file at " << mtlPath << std::endl;
+		return "";
+	}
+
+	while (getline(stream, line))
+	{
+		std::vector<std::string> lineContent;
+		split(line, ' ', lineContent);
+
+		if (lineContent.size() == 0)
+			continue;
+
+		if (lineContent[0] != "#")
+		{
+			if (lineContent[0] == "map_Kd")
+				return lineContent[1];
+		}
+	}
+
+	std::cout << "Could not find texture path at " << mtlPath << std::endl;
+}
+
+MeshResource
+MeshResource::LoadOBJ(std::string path, std::string& outTexPath)
+{
+	MeshResource mesh;
+
+	std::ifstream stream(path);
+
+	std::string line;
+
+	std::vector<vec3> positions;
+	std::vector<vec2> UVs;
+	std::vector<vec3> normals;
+	std::vector<GLuint> indPos;
+	std::vector<GLuint> indUV;
+	std::vector<GLuint> indNor;
+
+	if (stream.good() == false)
+	{
+		std::cout << "Could not find file at " << path << std::endl;
+		return mesh;
+	}
+
+	while (getline(stream, line))
+	{
+		std::vector<std::string> lineContent;
+		split(line, ' ', lineContent);
+
+		if (lineContent.size() == 0)
+			continue;
+
+		if (lineContent[0] != "#")
+		{
+			
+			if (lineContent[0] == "mtllib")
+			{
+				std::string mtlFileName = lineContent.back();
+				
+
+				std::string mtlPath;
+				std::vector<std::string> out;
+				split(path, '/', out);
+				
+				for (int i = 0; i < out.size() - 1; i++)
+					mtlPath.append(out[i]+"/");
+				
+				outTexPath = mtlPath + GetTexPath(mtlPath + mtlFileName);
+			}
+
+			if (lineContent[0] == "v")
+			{
+				std::vector<std::string> out;
+
+				split(line, ' ', out);
+				vec3 position;
+
+				for (int i = 1; i < 4; i++)
+					position[i - 1] = std::stof(out[i]);
+
+				positions.push_back(position);
+			}
+
+			if (lineContent[0] == "vt")
+			{
+				std::vector<std::string> out;
+				
+				split(line, ' ', out);
+				vec2 UV = vec2(std::stof(out[1]), std::stof(out[2]));
+
+				UVs.push_back(UV);
+			}
+
+			if (lineContent[0] == "vn")
+			{
+				std::vector<std::string> out;
+
+				split(line, ' ', out);
+				vec3 normal;
+
+				for (int i = 1; i < 4; i++)
+					normal[i - 1] = std::stof(out[i]);
+
+				normals.push_back(normal);
+			}
+
+			if (lineContent[0] == "f")
 			{
 				std::vector<std::string> out;
 

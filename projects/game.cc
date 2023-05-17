@@ -9,6 +9,7 @@
 //#include "render/grid.h"
 #include "Component/CameraComp.h"
 #include "Gameobject/Player.h" //testing with the camera componet
+#include "Gameobject/StaticObj.h"
 
 //#include "Component/CameraComponent.h"
 
@@ -31,9 +32,7 @@ GraphicsNode plane;
 Camera camera;
 
 //testing
-Player p1;
-
-Player p2(vec3(1,1,1));
+Player p1(vec3(0, 1, 0));
 
 
 
@@ -72,7 +71,6 @@ GameApp::Open()
 {
 	App::Open();
 	this->window = new Display::Window;
-
 	window->SetKeyPressFunction([this](int32 key, int32, int32 action, int32)
 	{
         manager->HandleKeyEvent(key, action);
@@ -117,108 +115,49 @@ GameApp::Open()
 		lights.push_back(PointLight(vec3(0, 0, 2), vec3(0.1, 0.1, 1), 2, 1));
 
 		// Sun
-		sun = Sun(vec3(1, 1, 1), vec3(1, -1, 0), 1);
+		sun = Sun(vec3(0.2, 0.3, 0.5), normalize(vec3(1, -1, 0)), .25);
 
 		BlinnPhongMaterial material;
 		material.LoadShader(mainShader->program);
-		// Plane
-		//plane.SetResources(
-		//	std::make_shared<ShaderResource>(mainShader),
-		//	std::make_shared<MeshResource>(MeshResource::LoadOBJ("../assets/plane.obj")));
 
-		////plane.shader->Bind(, "../projects/LightOBJ/code/frag.glsl");
+		// Player
+		p1.Init(mainShader, material);
 
+		// Debug ground
+		//BlinnPhongMaterial dbgMat;
+		//dbgMat.LoadShader(mainShader->program);
 
-		//BlinnPhongMaterial planeMat;
-		//planeMat.LoadShader(mainShader.program);
-		//planeMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), "../assets/smile.png");
-		//
-		//plane.mesh->primitives[0].material = planeMat;
-
-		//plane.mesh->Upload();
-
-		//TEST player render
-		p1.Init(mainShader,material);
-		p2.Init(mainShader,material);
-
-		// Monkey
-		/*
-		monkey.shader = plane.shader;
-		monkey.mesh.reset(new MeshResource(MeshResource::LoadOBJ("../projects/GLTFnormal/monke.mesh")));
-
-
-		BlinnPhongMaterial monkeyMat;
-		monkeyMat.shader = planeMat.shader;
-		monkeyMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), "../projects/GLTFnormal/palette.png");
-
-		monkey.mesh->material = monkeyMat;
-
-		monkey.mesh->Upload();
-
-		monkey.Translate(vec3(0, 0.4f, 0));
-		monkey.RotateY(PI);
-		monkey.RotateX(-PI / 4);
-
-		// GLTF Cube
-		cube.shader = plane.shader;
-		cube.mesh.reset(new MeshResource());
-		cube.mesh->primitives[0].material.shader = planeMat.shader;
-		cube.mesh->UploadGLTF(GLTFinfo::Load("../projects/GLTFnormal/gltf/cube.gltf", 0));
-		cube.Translate(vec3(2, 0, 2));
-
-
-		// GLTF Avocado
-		BlinnPhongNormalMaterial avocadoMat;
-		avocadoMat.LoadShader(normalShader.program);
-		avocado.shader = std::make_shared<ShaderResource>(normalShader);
-		avocado.mesh.reset(new MeshResource());
-		avocado.mesh->primitives[0].material = avocadoMat;
-		avocado.mesh->UploadGLTF(GLTFinfo::Load("../projects/GLTFnormal/gltf/Avocado/Avocado.gltf", 0));
-
-		avocado.Translate(vec3(-2, 0, 2));
-		avocado.Scale(vec3(50, 50, 50));
-
-		BlinnPhongNormalMaterial helmMat;
-		helmMat.shader = avocadoMat.shader;
-		helmet.shader = avocado.shader;
-		helmet.mesh.reset(new MeshResource());
-		helmet.mesh->primitives[0].material = helmMat;
-		helmet.mesh->UploadGLTF(GLTFinfo::Load("../projects/GLTFnormal/gltf/DamagedHelmet/DamagedHelmet.gltf", 0));
-
-		helmet.Translate(vec3(2, 0.5f, -2));
-
-		BlinnPhongNormalMaterial flightMat;
-		flightMat.shader = avocadoMat.shader;
-		flight.resize(4);
-
-		for (int i = 0; i < 4; i++)
+		for (int x = 0; x < 10; x++)
 		{
-			flight[i].shader = avocado.shader;
-			flight[i].mesh.reset(new MeshResource());
-			flight[i].mesh->primitives[0].material = flightMat;
-			flight[i].mesh->UploadGLTF(GLTFinfo::Load("../projects/GLTFnormal/gltf/FlightHelmet/FlightHelmet.gltf", i));
+			for (int y = 0; y < 10; y++)
+			{
+				StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
+				groundTile->Init(
+					"../assets/Kenney/grass.obj",
+					mainShader,
+					material
+				);
+			}
 		}
-		*/
+
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
 		
-		for (auto& gm : Scene::Get().GetGMVec())
+		for (auto& gm : Scene::Instance()->GetGameObjVec())
 		{
-			ShaderResource::LinkProgram(mainShader->program, mainShader->vertexShader, gm->renderableOBJ.mesh->primitives[0].material.shader);
+			ShaderResource::LinkProgram(
+				mainShader->program, 
+				mainShader->vertexShader, 
+				gm->renderableOBJ.mesh->primitives[0].material.shader
+			);
 		}
 
 		printf("Vertex errors:\n");
 		ShaderResource::ErrorLog(mainShader->vertexShader);
 		printf("Fragment errors:\n");
 		ShaderResource::ErrorLog(p1.renderableOBJ.mesh->primitives[0].material.shader);
-		//ShaderResource::LinkProgram(normalShader.program, normalShader.vertexShader, avocado.mesh->primitives[0].material.shader);
-		//printf("Vertex errors:\n");
-		//ShaderResource::ErrorLog(normalShader.vertexShader);
-		//printf("Fragment errors:\n");
-		//ShaderResource::ErrorLog(avocado.mesh->primitives[0].material.shader);
-
 
 		return true;
 	}
@@ -244,11 +183,10 @@ void
 GameApp::Run()
 {
 	glEnable(GL_DEPTH_TEST);
-
-	float speed = 0.05;
-	vec3 blockPos;
+	//glfwSwapInterval(0);
 
 	bool useSun = false;
+	float deltaSeconds = 0;
 
 	while (this->window->IsOpen())
 	{
@@ -275,11 +213,11 @@ GameApp::Run()
 		}
 		if (manager->keyboard.held[Input::Key::D])
 		{
-			right = 1;
+			right =-1;
 		}
 		if (manager->keyboard.held[Input::Key::A])
 		{
-			right = -1;
+			right = 1;
 		}
 		if (manager->keyboard.held[Input::Key::Space])
 		{
@@ -299,32 +237,18 @@ GameApp::Run()
 		
 
 		if (manager->mouse.held[Input::MouseButton::right])
-			camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, speed);
+			camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
 		
-		if(manager->mouse.held[Input::MouseButton::left])
-		{
-			blockPos += vec3(-right, up, forward) * speed;
-			//monkey.Translate(blockPos);
-			//monkey.RotateY(manager->mouse.dx/100);
-			//monkey.RotateX(manager->mouse.dy/100);
-		}
 
-		//Testing render player out
-		//p1.Draw(camera);
-
-		for(auto& gm : Scene::Get().GetGMVec())
+		p1.MoveForward(forward);
+		p1.MoveRight(right);
+		p1.Update(deltaSeconds);
+		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
 			gm->renderableOBJ.Draw(camera);
 		}
 
-		//plane.Draw(camera);
-		//monkey.Draw(camera);
-		//cube.Draw(camera);
-		//avocado.Draw(camera);
-		//helmet.Draw(camera);
-
-		//for (int i = 0; i < flight.size(); i++)
-		//	flight[i].Draw(camera);
+		camera.Follow(p1.position, deltaSeconds);
 
 		if (!useSun)
 		{
@@ -357,8 +281,7 @@ GameApp::Run()
 		this->window->SwapBuffers();
 
 		auto time2 = std::chrono::steady_clock::now();
-
-		int frameTime = std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count();
+		deltaSeconds = (float)std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count()/1000000;
 		//std::cout << frameTime/1000 << " ms" << std::endl;
 		//std::cout << 1000000/frameTime << " fps" << std::endl;
 #ifdef CI_TEST

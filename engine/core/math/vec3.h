@@ -162,3 +162,8 @@ inline vec3 normalize(vec3 const& v)
 
 	return result;
 }
+
+inline vec3 Lerp(vec3 a, vec3 b, float t)
+{
+	return a + (b - a) * t;
+}

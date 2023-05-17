@@ -8,6 +8,7 @@ public:
 	Camera();
 	void FreeFly(vec3 input, float dMouseX, float dMouseY, float speed);
 	void Orbit(float speed, float radius, float height, float time);
+	void Follow(vec3 target, float dt);
 
 	vec3 up;
 	vec3 right;
@@ -18,5 +19,6 @@ public:
 	mat4 view;
 
 private:
+	vec3 followOffset = vec3(0, 7, -4);
 	float dirx, diry;
 };

@@ -63,6 +63,24 @@ GraphicsNode::RotateZ(float rad)
 }
 
 void
+GraphicsNode::SetRotationX(float deg)
+{
+	this->rotation = rotationx(deg*PI/180);
+}
+
+void
+GraphicsNode::SetRotationY(float deg)
+{
+	this->rotation = rotationy(deg * PI / 180);
+}
+
+void
+GraphicsNode::SetRotationZ(float deg)
+{
+	this->rotation = rotationz(deg * PI / 180);
+}
+
+void
 GraphicsNode::RotateAxis(vec3 v, float rad)
 {
 	this->rotation = this->rotation * rotationaxis(v, rad);
