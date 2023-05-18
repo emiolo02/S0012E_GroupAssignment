@@ -35,6 +35,5 @@ namespace Input
 
 			trigger = (axes[4] > 0.5 || axes[5] > 0.5);
 		}
-
 	};
 }

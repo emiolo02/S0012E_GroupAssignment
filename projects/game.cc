@@ -9,6 +9,7 @@
 
 #include "Gameobject/Camera.h"
 #include "Gameobject/Player.h" 
+#include "Gameobject/EnemyAI.h"
 #include "Gameobject/StaticObj.h"
 
 #include "Light/PointLight.h"
@@ -25,10 +26,11 @@ GraphicsNode plane;
 Camera camera;
 
 //testing
-Player p1(vec3(0, 1, 0));
+Player p1(vec3(3, 1, 0));
 
+EnemyAI e1(vec3(-6, 1, 0));
 
-
+EnemyAI eList;
 
 std::vector<PointLight> lights;
 
@@ -116,23 +118,29 @@ GameApp::Open()
 		// Player
 		p1.Init(mainShader, material);
 
+		//Enemy
+		e1.Init(mainShader, material);
+		
+		//Testing init amount
+		// Work in progresss
+		eList.InitEnemyList(mainShader, material,2); 
+
 		// Debug ground
 		//BlinnPhongMaterial dbgMat;
 		//dbgMat.LoadShader(mainShader->program);
 
-		for (int x = 0; x < 10; x++)
-		{
-			for (int y = 0; y < 10; y++)
-			{
-				StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
-				groundTile->Init(
-					"../assets/Kenney/grass.obj",
-					mainShader,
-					material
-				);
-			}
-		}
-
+	//for (int x = 0; x < 10; x++)
+	//	{
+	//		for (int y = 0; y < 10; y++)
+	//		{
+	//			StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
+	//			groundTile->Init(
+	//				"../assets/Kenney/grass.obj",
+	//				mainShader,
+	//				material
+	//			);
+	//		}
+	//	}
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -221,6 +229,21 @@ GameApp::Run()
 			up = -1;
 		}
 
+		//Gamepad
+
+		float GmpadRight = manager->gamepad.leftStick.x;
+		float GmpadForward = manager->gamepad.leftStick.y;
+
+		if (GmpadForward > 0.5f)
+			forward = -1;
+		if (GmpadForward < -0.5f)
+			forward = 1;
+		if (GmpadRight > 0.5f)
+			right = -1;
+		if (GmpadRight < -0.5f)
+			right = 1;
+
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (manager->keyboard.pressed[Input::Key::Return])
@@ -236,6 +259,12 @@ GameApp::Run()
 		p1.MoveForward(forward);
 		p1.MoveRight(right);
 		p1.Update(deltaSeconds);
+
+
+		//e1.Update(p1.position,deltaSeconds);
+		eList.Update(p1.position, deltaSeconds);
+
+
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
 			gm->renderableOBJ.Draw(camera);
