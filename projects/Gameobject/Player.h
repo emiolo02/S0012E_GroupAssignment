@@ -5,8 +5,6 @@
 class Player : public GameObj
 {
 public:
-	vec3 position;
-
 	Player();
 	Player(vec3 pos);
 
@@ -26,6 +24,7 @@ private:
 	//BlinnPhongMaterial mat;
 	std::string texturePath;
 
+	Debug::Line line;
 	float speed = 4;
 	//input Gamepad
 	float rightInput = 0.0f;

@@ -7,6 +7,7 @@ PROJECT(S0012E_Group_Engine)
 ADD_SUBDIRECTORY(Gameobject)
 ADD_SUBDIRECTORY(Input)
 ADD_SUBDIRECTORY(Light)
+ADD_SUBDIRECTORY(Physics)
 ADD_SUBDIRECTORY(Resource)
 ADD_SUBDIRECTORY(World)
 
@@ -19,7 +20,7 @@ SOURCE_GROUP("S0012E_Group_Engine" FILES ${files_example})
 
 
 ADD_EXECUTABLE(S0012E_Group_Engine ${files_example})
-TARGET_LINK_LIBRARIES(S0012E_Group_Engine core render Gameobject Input Light Resource World  )
+TARGET_LINK_LIBRARIES(S0012E_Group_Engine core render Gameobject Input Light Physics Resource World)
 ADD_DEPENDENCIES(S0012E_Group_Engine core render)
 
 if (MSVC)

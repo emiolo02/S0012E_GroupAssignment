@@ -115,7 +115,6 @@ GameApp::Open()
 
 		// Player
 		p1.Init(mainShader, material);
-
 		// Debug ground
 		//BlinnPhongMaterial dbgMat;
 		//dbgMat.LoadShader(mainShader->program);
@@ -137,6 +136,7 @@ GameApp::Open()
 		// Camera
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
+		Scene::Instance()->SetMainCamera(&camera);
 		
 		for (auto& gm : Scene::Instance()->GetGameObjVec())
 		{
@@ -238,7 +238,7 @@ GameApp::Run()
 		p1.Update(deltaSeconds);
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
-			gm->renderableOBJ.Draw(camera);
+			gm->renderableOBJ.Draw(Scene::Instance()->GetMainCamera());
 		}
 
 		camera.Follow(p1.position, deltaSeconds);

@@ -1,5 +1,7 @@
 #include "Player.h"
 
+#define DEBUG
+
 //Creates player at world origin
 Player::Player()
 {
@@ -29,6 +31,11 @@ Player::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerM
 	renderableOBJ.mesh->primitives[0].material = playerMat;
 	renderableOBJ.mesh->Upload();
 	Scene::Instance()->AddObj(this);
+
+#ifdef DEBUG
+	line = Debug::Line(vec3(), vec3());
+	line.setColor(vec3(0, 1, 0));
+#endif // DEBUG
 }
 
 //Runs every frame
@@ -38,6 +45,16 @@ Player::Update(float dt)
 	position += vec3(rightInput, 0, forwardInput) * speed * dt;
 
 	renderableOBJ.Translate(position);
+
+#ifdef DEBUG
+	line.setLine(this->position, this->position+vec3(rightInput, 0, forwardInput) * speed);
+	mat4 view = Scene::Instance()->GetMainCamera().view;
+	mat4 proj = Scene::Instance()->GetMainCamera().projection;
+
+	line.setMVP(proj * view);
+	line.draw();
+#endif // DEBUG
+
 }
 
 void 
