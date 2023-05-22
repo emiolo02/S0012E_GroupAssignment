@@ -33,4 +33,6 @@ public:
 
 	void Draw(Camera cam) { renderableOBJ.Draw(cam); }
 
+	virtual void Update(float dt){}
+
 };

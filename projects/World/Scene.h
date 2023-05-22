@@ -6,6 +6,9 @@ class GameObj; //Forward declare
 class Camera;
 class Collider;
 
+class Player;
+class EnemyAI;
+
 //Singleton
 class Scene
 {
@@ -20,6 +23,11 @@ public:
 	void AddObj(GameObj* gm) 
 	{ 
 		gameObjects.push_back(gm); 
+	}
+
+	void AddEnemies(EnemyAI* agent)
+	{
+		enemies.push_back(agent);
 	}
 
 	std::vector<GameObj*> GetGameObjVec()
@@ -47,6 +55,11 @@ public:
         return *mainCamera;
     }
 
+	  std::vector<EnemyAI*> GetEnemyVec()
+	  {
+		    return enemies;
+	  }
+
 private:
 	static Scene* instance; //declare 
 	std::vector<GameObj*> gameObjects; //GameOBJ Placeholder //Keep track of all the object in the game
@@ -54,6 +67,8 @@ private:
     
     Camera* mainCamera;
     Scene() {}
+	std::vector<EnemyAI*> enemies;
+	Scene() {}
 	~Scene() {}
 };
 

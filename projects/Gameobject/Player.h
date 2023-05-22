@@ -5,12 +5,13 @@
 class Player : public GameObj
 {
 public:
+
 	Player();
 	Player(vec3 pos);
 
 	void Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat);
 
-	void Update(float dt);
+	void Update(float dt) override;
 
 	void MoveRight(float value);
 	void MoveForward(float value);

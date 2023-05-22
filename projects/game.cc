@@ -9,6 +9,7 @@
 
 #include "Gameobject/Camera.h"
 #include "Gameobject/Player.h" 
+#include "Gameobject/EnemyAI.h"
 #include "Gameobject/StaticObj.h"
 
 #include "Light/PointLight.h"
@@ -25,10 +26,11 @@ GraphicsNode plane;
 Camera camera;
 
 //testing
-Player p1(vec3(0, 1, 0));
+Player p1(vec3(3, 1, 0));
 
+//EnemyAI e1(vec3(-6, 1, 0),p1.position);
 
-
+EnemyAI eList(vec3(-3, 1, 0), p1.position);
 
 std::vector<PointLight> lights;
 
@@ -115,11 +117,15 @@ GameApp::Open()
 
 		// Player
 		p1.Init(mainShader, material);
+
+		//Enemy
+		//init enemies
+		eList.InitEnemyList(mainShader, material,3); 
 		// Debug ground
 		//BlinnPhongMaterial dbgMat;
 		//dbgMat.LoadShader(mainShader->program);
 
-		for (int x = 0; x < 10; x++)
+	for (int x = 0; x < 10; x++)
 		{
 			for (int y = 0; y < 10; y++)
 			{
@@ -131,7 +137,6 @@ GameApp::Open()
 				);
 			}
 		}
-
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -176,14 +181,13 @@ void
 GameApp::Run()
 {
 	glEnable(GL_DEPTH_TEST);
-	//glfwSwapInterval(0);
+	glfwSwapInterval(0);
 
 	bool useSun = false;
 	float deltaSeconds = 0;
 
 	while (this->window->IsOpen())
 	{
-		//test joystick
 		//Gamepad logic
 		manager->gamepad.Update();
 
@@ -221,6 +225,21 @@ GameApp::Run()
 			up = -1;
 		}
 
+		//Gamepad
+
+		float GmpadRight = manager->gamepad.leftStick.x;
+		float GmpadForward = manager->gamepad.leftStick.y;
+
+		if (GmpadForward > 0.5f)
+			forward = -1;
+		if (GmpadForward < -0.5f)
+			forward = 1;
+		if (GmpadRight > 0.5f)
+			right = -1;
+		if (GmpadRight < -0.5f)
+			right = 1;
+
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (manager->keyboard.pressed[Input::Key::Return])
@@ -235,12 +254,14 @@ GameApp::Run()
 
 		p1.MoveForward(forward);
 		p1.MoveRight(right);
-		p1.Update(deltaSeconds);
+		//p1.Update(deltaSeconds);
+		
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
-			gm->renderableOBJ.Draw(Scene::Instance()->GetMainCamera());
+			gm->Update(deltaSeconds);
+			gm->renderableOBJ.Draw(camera);
 		}
-
+		
 		camera.Follow(p1.position, deltaSeconds);
 
 		if (!useSun)
@@ -273,10 +294,14 @@ GameApp::Run()
 		}
 		this->window->SwapBuffers();
 
+		
 		auto time2 = std::chrono::steady_clock::now();
+		float lastDT = deltaSeconds;
 		deltaSeconds = (float)std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count()/1000000;
-		//std::cout << frameTime/1000 << " ms" << std::endl;
-		//std::cout << 1000000/frameTime << " fps" << std::endl;
+		
+		float avgDT = (deltaSeconds + lastDT) / 2;
+		//std::cout << deltaSeconds << " s" << std::endl;
+		//std::cout << 1/avgDT << " fps" << std::endl;
 #ifdef CI_TEST
 		// if we're running CI, we want to return and exit the application after one frame
 		// break the loop and hopefully exit gracefully
