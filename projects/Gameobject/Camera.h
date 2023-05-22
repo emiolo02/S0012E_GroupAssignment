@@ -1,7 +1,6 @@
 #pragma once
 #include "core/math/mat4.h"
 
-
 class Camera
 {
 public:

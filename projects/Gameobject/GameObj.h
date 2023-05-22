@@ -2,18 +2,12 @@
 
 #include <string>
 #include <vector>
-#include "core/math/mat4.h"
-
 #include <iostream>
 
-//#include "../Component/Component.h"
-
 #include "../Resource/GraphicsNode.h"
-#include "../Gameobject/Camera.h"
+#include "../Physics/Physics.h"
 #include "../World/Scene.h"
-
-//include all component h file here
-
+#include "../Gameobject/Camera.h"
 
 //testing
 class GameObj
@@ -26,6 +20,7 @@ class GameObj
 public:
 	GraphicsNode renderableOBJ;
 	vec3 position;
+
 	GameObj() {};
 	//FUTURE IMPROVEMENT (IF EVERYTHING CRASH)
 	/*GameObj(std::string tag)

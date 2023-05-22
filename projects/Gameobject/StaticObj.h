@@ -3,7 +3,6 @@
 class StaticObj : public GameObj
 {
 public:
-
 	StaticObj();
 	StaticObj(vec3 pos);
 
