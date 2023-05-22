@@ -7,17 +7,14 @@ EnemyAI::EnemyAI()
 	modelPath = "../assets/cube.obj";
 }
 
-
 //Create enemy at specified position
-EnemyAI::EnemyAI(vec3 startPos)
+EnemyAI::EnemyAI(vec3 startPos, vec3& target)
 {
-	position = startPos;
+	this->position = startPos;
+	targetRef = &target;
 	texturePath = "../assets/angrysmile.png";
 	modelPath = "../assets/cube.obj";
 }
-
-//Upcoming feature: Create enemy at random position
-
 
 //Init data for the GraphicsNode 
 void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& enemyMat)
@@ -34,45 +31,33 @@ void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& e
 	renderableOBJ.Translate(position);
 	//Push it up to the gameobj list
 	Scene::Instance()->AddObj(this);
+	Scene::Instance()->AddEnemies(this);
+
 }
 
-void EnemyAI::Update(vec3& target, float dt)
+void EnemyAI::Update(float dt) 
 {
-	MoveTo(target, dt);
-}
-
-//can change it by getting reference to the player
-void EnemyAI::MoveTo(vec3& target, float dt) 
-{
-	this->position = Lerp(this->position, target, dt);
+	vec3 dir = normalize(*targetRef - this->position);
+	this->position += dir * speed * dt;
 
 	renderableOBJ.Translate(this->position);
 }
 
+//cleaner
+//void EnemyAI::MoveTo(vec3& target, float dt) 
+//{
+//vec3 dir = normalize(*targetRef - this->position);
+//this->position += dir * speed * dt;
+//
+//renderableOBJ.Translate(this->position);
+//}
 
-//WORKING PROGRESS
-
+//Init Multiple enemies
 void EnemyAI::InitEnemyList(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& enemyMat, int amount)
 {
-	//Scuffed implementation
-	//Testing phase //Everything spawns at same position
-	for (int i = 1; i <= amount; ++i)
+	for (int i = 0; i < amount; i++)
 	{	
-		EnemyAI* newEnemy = new EnemyAI(vec3(3*i,0,1 *i));
-
-		renderableOBJ.SetResources(shader,
-			std::make_shared<MeshResource>(MeshResource::LoadOBJ(modelPath)));
-
-		//Setup material loader
-		enemyMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), texturePath.c_str());
-
-		renderableOBJ.mesh->primitives[0].material = enemyMat;
-		renderableOBJ.mesh->Upload();
-		
-		renderableOBJ.Translate(newEnemy->position);
-		//this->position = newEnemy->position;
-		//Push it up to the gameobj list
-		Scene::Instance()->AddObj(this);
-		//delete newEnemy;
+		EnemyAI* newEnemy = new EnemyAI(vec3(rand()%5, 0, rand()%10), *targetRef);
+		newEnemy->Init(shader, enemyMat);
 	}
 }

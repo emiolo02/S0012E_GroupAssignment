@@ -28,9 +28,9 @@ Camera camera;
 //testing
 Player p1(vec3(3, 1, 0));
 
-EnemyAI e1(vec3(-6, 1, 0));
+//EnemyAI e1(vec3(-6, 1, 0),p1.position);
 
-EnemyAI eList;
+EnemyAI eList(vec3(-3, 1, 0), p1.position);
 
 std::vector<PointLight> lights;
 
@@ -119,28 +119,25 @@ GameApp::Open()
 		p1.Init(mainShader, material);
 
 		//Enemy
-		e1.Init(mainShader, material);
-		
-		//Testing init amount
-		// Work in progresss
-		eList.InitEnemyList(mainShader, material,2); 
+		//init enemies
+		eList.InitEnemyList(mainShader, material,3); 
 
 		// Debug ground
 		//BlinnPhongMaterial dbgMat;
 		//dbgMat.LoadShader(mainShader->program);
 
-	//for (int x = 0; x < 10; x++)
-	//	{
-	//		for (int y = 0; y < 10; y++)
-	//		{
-	//			StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
-	//			groundTile->Init(
-	//				"../assets/Kenney/grass.obj",
-	//				mainShader,
-	//				material
-	//			);
-	//		}
-	//	}
+	for (int x = 0; x < 10; x++)
+		{
+			for (int y = 0; y < 10; y++)
+			{
+				StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
+				groundTile->Init(
+					"../assets/Kenney/grass.obj",
+					mainShader,
+					material
+				);
+			}
+		}
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -191,7 +188,6 @@ GameApp::Run()
 
 	while (this->window->IsOpen())
 	{
-		//test joystick
 		//Gamepad logic
 		manager->gamepad.Update();
 
@@ -258,18 +254,14 @@ GameApp::Run()
 
 		p1.MoveForward(forward);
 		p1.MoveRight(right);
-		p1.Update(deltaSeconds);
-
-
-		//e1.Update(p1.position,deltaSeconds);
-		eList.Update(p1.position, deltaSeconds);
-
-
+		//p1.Update(deltaSeconds);
+		
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
+			gm->Update(deltaSeconds);
 			gm->renderableOBJ.Draw(camera);
 		}
-
+		
 		camera.Follow(p1.position, deltaSeconds);
 
 		if (!useSun)

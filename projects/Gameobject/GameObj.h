@@ -25,7 +25,7 @@ class GameObj
 
 public:
 	GraphicsNode renderableOBJ;
-
+	vec3 position;
 	GameObj() {};
 	//FUTURE IMPROVEMENT (IF EVERYTHING CRASH)
 	/*GameObj(std::string tag)
@@ -37,5 +37,7 @@ public:
 	std::string GetName();*/
 
 	void Draw(Camera cam) { renderableOBJ.Draw(cam); }
+
+	virtual void Update(float dt){}
 
 };
