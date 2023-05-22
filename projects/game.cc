@@ -181,7 +181,7 @@ void
 GameApp::Run()
 {
 	glEnable(GL_DEPTH_TEST);
-	//glfwSwapInterval(0);
+	glfwSwapInterval(0);
 
 	bool useSun = false;
 	float deltaSeconds = 0;
@@ -294,10 +294,14 @@ GameApp::Run()
 		}
 		this->window->SwapBuffers();
 
+		
 		auto time2 = std::chrono::steady_clock::now();
+		float lastDT = deltaSeconds;
 		deltaSeconds = (float)std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count()/1000000;
-		//std::cout << frameTime/1000 << " ms" << std::endl;
-		//std::cout << 1000000/frameTime << " fps" << std::endl;
+		
+		float avgDT = (deltaSeconds + lastDT) / 2;
+		//std::cout << deltaSeconds << " s" << std::endl;
+		//std::cout << 1/avgDT << " fps" << std::endl;
 #ifdef CI_TEST
 		// if we're running CI, we want to return and exit the application after one frame
 		// break the loop and hopefully exit gracefully

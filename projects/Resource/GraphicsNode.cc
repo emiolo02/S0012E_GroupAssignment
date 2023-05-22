@@ -38,10 +38,10 @@ void GraphicsNode::Draw(Camera cam)
 
 	glDrawElements(GL_TRIANGLES, this->mesh->ind.size(), GL_UNSIGNED_INT, NULL);
 
-	for (auto& primitive : this->mesh->primitives)
-		primitive.material.texture->UnbindTexture();
+	//for (auto& primitive : this->mesh->primitives)
+		//primitive.material.texture->UnbindTexture();
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void
