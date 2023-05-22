@@ -7,6 +7,8 @@ ADD_LIBRARY(
     GameObj.h
     Player.h
     Player.cc
+    EnemyAI.h
+    EnemyAI.cc
     StaticObj.h
     StaticObj.cc
     Camera.h
