@@ -4,7 +4,12 @@
 
 class GameObj; //Forward declare
 class Camera;
+
+namespace Physics
+{
 class Collider;
+
+}
 
 class Player;
 class EnemyAI;
@@ -35,12 +40,12 @@ public:
 		return gameObjects;
 	}
 
-    void AddCollider(Collider* col)
+    void AddCollider(Physics::Collider* col)
     {
         colliders.push_back(col);
     }
 
-    std::vector<Collider*> GetColliders()
+    std::vector<Physics::Collider*> GetColliders()
     {
         return colliders;
     }
@@ -63,10 +68,9 @@ public:
 private:
 	static Scene* instance; //declare 
 	std::vector<GameObj*> gameObjects; //GameOBJ Placeholder //Keep track of all the object in the game
-    std::vector<Collider*> colliders;
+    std::vector<Physics::Collider*> colliders;
     
     Camera* mainCamera;
-    Scene() {}
 	std::vector<EnemyAI*> enemies;
 	Scene() {}
 	~Scene() {}

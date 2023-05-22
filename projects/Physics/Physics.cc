@@ -6,13 +6,11 @@ namespace Physics
     {
     }
 
-    CircleCollider::CircleCollider(vec2 pos, float rad, GameObj* par, std::vector<Collider*>& SceneColliders)
+    CircleCollider::CircleCollider(vec2 pos, float rad, GameObj* par)
     {
         position = pos;
         radius = rad;
         parent = par;
-
-        SceneColliders.push_back(this);
     }
 
 	HitResult

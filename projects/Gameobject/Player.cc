@@ -45,11 +45,33 @@ Player::Update(float dt)
 	position += vec3(rightInput, 0, forwardInput) * speed * dt;
 
 	renderableOBJ.Translate(position);
+	vec3 aimDir = vec3(0, 0, 10);
+
+	// TODO: Ugly ass code fix this garbage
+	Physics::Ray ray = Physics::Ray(vec2(position.x, position.z), vec2(0, 10));
+	Physics::HitResult hit;
+	Physics::HitResult closest;
+	bool isHit = false;
+	for (auto& col : Scene::Instance()->GetColliders())
+	{
+		auto hit = col->RayIntersect(ray, closest.t);
+		if (hit.object != nullptr)
+		{
+			//if(hit.t < closest.t);
+			closest = hit;
+			isHit = true;
+		}
+	}
 
 #ifdef DEBUG
-	line.setLine(this->position, this->position+vec3(rightInput, 0, forwardInput) * speed);
+	line.setLine(this->position, this->position+aimDir);
 	mat4 view = Scene::Instance()->GetMainCamera().view;
 	mat4 proj = Scene::Instance()->GetMainCamera().projection;
+
+	if (isHit)
+		line.setColor(vec3(1, 0, 0));
+	else
+		line.setColor(vec3(0, 1, 0));
 
 	line.setMVP(proj * view);
 	line.draw();

@@ -57,7 +57,7 @@ namespace Physics
 
         CircleCollider();
 
-        CircleCollider(vec2 pos, float rad, GameObj* par, std::vector<Collider*>& SceneColliders);
+        CircleCollider(vec2 pos, float rad, GameObj* par);
 
         HitResult RayIntersect(Ray ray, float maxDist) override;
     };

@@ -32,7 +32,6 @@ void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& e
 	//Push it up to the gameobj list
 	Scene::Instance()->AddObj(this);
 	Scene::Instance()->AddEnemies(this);
-
 }
 
 void EnemyAI::Update(float dt) 

@@ -5,7 +5,6 @@
 
 #include "GameObj.h"
 
-
 class Player;
 
 class EnemyAI : public GameObj
@@ -23,6 +22,7 @@ public:
 	//vec3 position;
 	vec3* targetRef;
 
+
 	EnemyAI();
 	EnemyAI(vec3 startPos,vec3& target);
 	~EnemyAI(){} //deallocate enemy data of the selected enemy
@@ -36,6 +36,5 @@ public:
 
 	//Initialize amount of enemy to spawn
 	//Testing
-	void InitAmount(int amount);
 	void InitEnemyList(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat, int amount);
 };
