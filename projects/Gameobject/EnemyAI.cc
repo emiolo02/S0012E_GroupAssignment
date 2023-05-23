@@ -15,6 +15,13 @@ EnemyAI::EnemyAI(vec3 startPos, vec3& target)
 	texturePath = "../assets/angrysmile.png";
 	modelPath = "../assets/cube.obj";
 }
+void
+EnemyAI::Destroy()
+{
+	Scene::Instance()->DestroyObj(this);
+	Scene::Instance()->DestroyEnemy(this);
+	Scene::Instance()->DestroyCollider(&this->collider);
+}
 
 //Init data for the GraphicsNode 
 void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& enemyMat)
@@ -29,15 +36,21 @@ void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& e
 	renderableOBJ.mesh->Upload();
 
 	renderableOBJ.Translate(position);
+
+	collider = Physics::CircleCollider(vec2(position.x, position.z), 1, this);
+
 	//Push it up to the gameobj list
 	Scene::Instance()->AddObj(this);
 	Scene::Instance()->AddEnemies(this);
+	Scene::Instance()->AddCollider(&collider);
 }
 
 void EnemyAI::Update(float dt) 
 {
 	vec3 dir = normalize(*targetRef - this->position);
 	this->position += dir * speed * dt;
+
+	collider.position = vec2(position.x, position.z);
 
 	renderableOBJ.Translate(this->position);
 }

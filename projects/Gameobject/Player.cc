@@ -47,6 +47,36 @@ Player::Update(float dt)
 	renderableOBJ.Translate(position);
 	vec3 aimDir = vec3(aimInput.x, 0, aimInput.y)*10;
 
+#ifdef DEBUG
+	// Draw debug line
+
+	vec3 rayDir = vec3(aimInput.x, 0, aimInput.y);
+	line.setLine(this->position, this->position + aimDir);
+	mat4 view = Scene::Instance()->GetMainCamera().view;
+	mat4 proj = Scene::Instance()->GetMainCamera().projection;
+
+
+	line.setMVP(proj * view);
+	line.draw();
+#endif // DEBUG
+}
+
+void 
+Player::MoveInput(vec2 value)
+{
+	moveInput = value;
+}
+
+void 
+Player::AimInput(vec2 value)
+{
+	if (length(value) > 0)
+	aimInput = normalize(value);
+}
+
+void
+Player::Shoot()
+{
 	// TODO: Ugly ass code fix this garbage
 	Physics::Ray ray = Physics::Ray(vec2(position.x, position.z), aimInput);
 	Physics::HitResult hit;
@@ -62,31 +92,6 @@ Player::Update(float dt)
 			isHit = true;
 		}
 	}
-
-#ifdef DEBUG
-	line.setLine(this->position, this->position+aimDir);
-	mat4 view = Scene::Instance()->GetMainCamera().view;
-	mat4 proj = Scene::Instance()->GetMainCamera().projection;
-
 	if (isHit)
-		line.setColor(vec3(1, 0, 0));
-	else
-		line.setColor(vec3(0, 1, 0));
-
-	line.setMVP(proj * view);
-	line.draw();
-#endif // DEBUG
-
-}
-
-void 
-Player::MoveInput(vec2 value)
-{
-	moveInput = value;
-}
-
-void 
-Player::AimInput(vec2 value)
-{
-	aimInput = value;
+		closest.object->Destroy();
 }

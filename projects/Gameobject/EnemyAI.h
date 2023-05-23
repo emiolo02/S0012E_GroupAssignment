@@ -21,15 +21,15 @@ class EnemyAI : public GameObj
 public:
 	//vec3 position;
 	vec3* targetRef;
-
+	Physics::CircleCollider collider;
 
 	EnemyAI();
 	EnemyAI(vec3 startPos,vec3& target);
-	~EnemyAI(){} //deallocate enemy data of the selected enemy
 
 	void Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat);
 
 	void Update(float dt) override;
+	void Destroy() override; //deallocate enemy data of the selected enemy
 
 	//void MoveTo(vec3& target, float dt);
 	//Check collision

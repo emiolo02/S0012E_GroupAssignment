@@ -28,8 +28,6 @@ Camera camera;
 //testing
 Player p1(vec3(3, 1, 0));
 
-Physics::CircleCollider* testCollider;
-//EnemyAI e1(vec3(-6, 1, 0),p1.position);
 
 EnemyAI eList(vec3(-3, 1, 0), p1.position);
 
@@ -119,11 +117,6 @@ GameApp::Open()
 		// Player
 		p1.Init(mainShader, material);
 
-		testCollider = new Physics::CircleCollider(
-			vec2(-10, 10), 
-			1.0f, 
-			new GameObj());
-		Scene::Instance()->AddCollider(testCollider); 
 		//Enemy
 		//init enemies
 		eList.InitEnemyList(mainShader, material,3); 
@@ -193,6 +186,7 @@ GameApp::Run()
 	float deltaSeconds = 0;
 	vec2 inputLstick;
 	vec2 inputRstick;
+	bool hasShot = false;
 
 	while (this->window->IsOpen())
 	{
@@ -243,6 +237,10 @@ GameApp::Run()
 
 		p1.MoveInput(inputLstick);
 		p1.AimInput(inputRstick);
+
+		if (manager->gamepad.trigger && !hasShot)
+			p1.Shoot();
+		hasShot = manager->gamepad.trigger;
 		//p1.Update(deltaSeconds);
 		
 		for(auto& gm : Scene::Instance()->GetGameObjVec())

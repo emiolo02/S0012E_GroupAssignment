@@ -30,10 +30,24 @@ public:
 		gameObjects.push_back(gm); 
 	}
 
+    void DestroyObj(GameObj* gm)
+    {
+        auto it = std::find(gameObjects.begin(), gameObjects.end(), gm);
+        if (it != gameObjects.end())
+        gameObjects.erase(it);
+    }
+
 	void AddEnemies(EnemyAI* agent)
 	{
 		enemies.push_back(agent);
 	}
+
+    void DestroyEnemy(EnemyAI* e)
+    {
+        auto it = std::find(enemies.begin(),enemies.end(), e);
+        if (it != enemies.end())
+            enemies.erase(it);
+    }
 
 	std::vector<GameObj*> GetGameObjVec()
 	{
@@ -43,6 +57,13 @@ public:
     void AddCollider(Physics::Collider* col)
     {
         colliders.push_back(col);
+    }
+
+    void DestroyCollider(Physics::Collider* col)
+    {
+        auto it = std::find(colliders.begin(), colliders.end(), col);
+        if (it != colliders.end())
+            colliders.erase(it);
     }
 
     std::vector<Physics::Collider*> GetColliders()
@@ -60,10 +81,10 @@ public:
         return *mainCamera;
     }
 
-	  std::vector<EnemyAI*> GetEnemyVec()
-	  {
-		    return enemies;
-	  }
+	std::vector<EnemyAI*> GetEnemyVec()
+	{
+	    return enemies;
+	}
 
 private:
 	static Scene* instance; //declare 
