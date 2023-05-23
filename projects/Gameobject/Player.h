@@ -13,8 +13,8 @@ public:
 
 	void Update(float dt) override;
 
-	void MoveRight(float value);
-	void MoveForward(float value);
+	void MoveInput(vec2 value);
+	void AimInput(vec2 value);
 
 	void Collision();
 	void Shoot();
@@ -28,6 +28,6 @@ private:
 	Debug::Line line;
 	float speed = 4;
 	//input Gamepad
-	float rightInput = 0.0f;
-	float forwardInput = 0.0f;
+	vec2 moveInput;
+	vec2 aimInput;
 };

@@ -6,13 +6,11 @@ namespace Physics
     {
     }
 
-    CircleCollider::CircleCollider(vec2 pos, float rad, GameObj* par, std::vector<Collider*>& SceneColliders)
+    CircleCollider::CircleCollider(vec2 pos, float rad, GameObj* par)
     {
         position = pos;
         radius = rad;
         parent = par;
-
-        SceneColliders.push_back(this);
     }
 
 	HitResult
@@ -47,7 +45,7 @@ namespace Physics
             hit.object = this->parent;
             return hit;
         }
-        if (temp2 < 100)
+        if (temp2 < maxDist)
         {
             vec2 p = ray.PointAt(temp2);
             hit.p = p;

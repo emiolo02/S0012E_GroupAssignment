@@ -21,7 +21,7 @@ public:
 	GraphicsNode renderableOBJ;
 	vec3 position;
 
-	GameObj() {};
+	GameObj() {}
 	//FUTURE IMPROVEMENT (IF EVERYTHING CRASH)
 	/*GameObj(std::string tag)
 	{
@@ -34,5 +34,5 @@ public:
 	void Draw(Camera cam) { renderableOBJ.Draw(cam); }
 
 	virtual void Update(float dt){}
-
+	virtual void Destroy(){}
 };
