@@ -11,6 +11,10 @@ ADD_LIBRARY(
     EnemyAI.cc
     StaticObj.h
     StaticObj.cc
+    MapGen.h
+    MapGen.cc
+    MapTile.h
+    MapTile.cc
     Camera.h
     Camera.cc
 )
