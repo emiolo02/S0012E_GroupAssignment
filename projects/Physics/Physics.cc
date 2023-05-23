@@ -45,7 +45,7 @@ namespace Physics
             hit.object = this->parent;
             return hit;
         }
-        if (temp2 < 100)
+        if (temp2 < maxDist)
         {
             vec2 p = ray.PointAt(temp2);
             hit.p = p;

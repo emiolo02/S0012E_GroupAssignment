@@ -42,13 +42,13 @@ Player::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerM
 void
 Player::Update(float dt)
 {
-	position += vec3(rightInput, 0, forwardInput) * speed * dt;
+	position += vec3(moveInput.x, 0, moveInput.y) * speed * dt;
 
 	renderableOBJ.Translate(position);
-	vec3 aimDir = vec3(0, 0, 10);
+	vec3 aimDir = vec3(aimInput.x, 0, aimInput.y)*10;
 
 	// TODO: Ugly ass code fix this garbage
-	Physics::Ray ray = Physics::Ray(vec2(position.x, position.z), vec2(0, 10));
+	Physics::Ray ray = Physics::Ray(vec2(position.x, position.z), aimInput);
 	Physics::HitResult hit;
 	Physics::HitResult closest;
 	bool isHit = false;
@@ -80,13 +80,13 @@ Player::Update(float dt)
 }
 
 void 
-Player::MoveRight(float value)
+Player::MoveInput(vec2 value)
 {
-	rightInput = value;
+	moveInput = value;
 }
 
 void 
-Player::MoveForward(float value)
+Player::AimInput(vec2 value)
 {
-	forwardInput = value;
+	aimInput = value;
 }

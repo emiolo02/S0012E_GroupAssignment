@@ -191,59 +191,42 @@ GameApp::Run()
 
 	bool useSun = false;
 	float deltaSeconds = 0;
+	vec2 inputLstick;
+	vec2 inputRstick;
 
 	while (this->window->IsOpen())
 	{
+		// Calculate dt
+		auto time1 = std::chrono::steady_clock::now();
+		
 		//Gamepad logic
 		manager->gamepad.Update();
+		inputLstick = -manager->gamepad.leftStick;
+		inputRstick = -manager->gamepad.rightStick;
 
-		auto time1 = std::chrono::steady_clock::now();
-
+		//Keyboard logic
 		manager->BeginFrame();
 		manager->mouse.dx = 0;
 		manager->mouse.dy = 0;
+		
+		
 		this->window->Update();
-		// UPDATE
-
-		float right = 0, up = 0, forward = 0;
 		if (manager->keyboard.held[Input::Key::W])
 		{
-			forward = 1;
+			inputLstick.y = 1;
 		}
 		if (manager->keyboard.held[Input::Key::S])
 		{
-			forward = -1;
+			inputLstick.y = -1;
 		}
 		if (manager->keyboard.held[Input::Key::D])
 		{
-			right =-1;
+			inputLstick.x =-1;
 		}
 		if (manager->keyboard.held[Input::Key::A])
 		{
-			right = 1;
+			inputLstick.x = 1;
 		}
-		if (manager->keyboard.held[Input::Key::Space])
-		{
-			up = 1;
-		}
-		if (manager->keyboard.held[Input::Key::LeftShift])
-		{
-			up = -1;
-		}
-
-		//Gamepad
-
-		float GmpadRight = manager->gamepad.leftStick.x;
-		float GmpadForward = manager->gamepad.leftStick.y;
-
-		if (GmpadForward > 0.5f)
-			forward = -1;
-		if (GmpadForward < -0.5f)
-			forward = 1;
-		if (GmpadRight > 0.5f)
-			right = -1;
-		if (GmpadRight < -0.5f)
-			right = 1;
 
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -254,12 +237,12 @@ GameApp::Run()
 		}
 		
 
-		if (manager->mouse.held[Input::MouseButton::right])
-			camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
+		//if (manager->mouse.held[Input::MouseButton::right])
+		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
 		
 
-		p1.MoveForward(forward);
-		p1.MoveRight(right);
+		p1.MoveInput(inputLstick);
+		p1.AimInput(inputRstick);
 		//p1.Update(deltaSeconds);
 		
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
