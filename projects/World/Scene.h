@@ -68,7 +68,6 @@ private:
     Camera* mainCamera;
     Scene() {}
 	std::vector<EnemyAI*> enemies;
-	Scene() {}
 	~Scene() {}
 };
 
