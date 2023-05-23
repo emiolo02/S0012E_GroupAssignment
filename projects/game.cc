@@ -11,9 +11,7 @@
 #include "Gameobject/Player.h" 
 #include "Gameobject/EnemyAI.h"
 #include "Gameobject/StaticObj.h"
-//testing map tiles
 #include "Gameobject/MapGen.h"
-//#include "Gameobject/MapTile.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -28,16 +26,11 @@ GraphicsNode plane;
 
 Camera camera;
 
-//testing
 Player p1(vec3(3, 1, 0));
-
-//EnemyAI e1(vec3(-6, 1, 0),p1.position);
 
 EnemyAI eList(vec3(-3, 1, 0), p1.position);
 
-//MapTile & MapGen
 MapGen mapGenerator(50, 50);
-//MapTile maptile(1, 1, OPEN);
 
 
 std::vector<PointLight> lights;
@@ -127,7 +120,6 @@ GameApp::Open()
 		p1.Init(mainShader, material);
 
 		//Enemy
-		//init enemies
 		eList.InitEnemyList(mainShader, material,3);
 
 		//Map

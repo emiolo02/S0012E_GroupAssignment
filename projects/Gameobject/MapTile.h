@@ -10,7 +10,6 @@ enum TileType
 
 struct TileProperties
 {
-	//bool bWall;
 	int x_Coord;
 	int y_Coord;
 	TileType type;
@@ -63,6 +62,5 @@ public:
 		position = vec3(pos.x,0.25f,pos.z);
 		StaticObj* staticObj = new StaticObj(position);
 		staticObj->Init(modelID, shader, mat);
-		this->SetType(BLOCKED);
 	}
 };
