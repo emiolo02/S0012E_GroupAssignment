@@ -22,7 +22,6 @@ class StaticObj;
 
 class MapTile : public GameObj
 {
-
 public:
 	TileProperties tileProp;
 	
@@ -32,6 +31,7 @@ public:
 		tileProp.x_Coord = 0;
 		tileProp.y_Coord = 0;
 		tileProp.type = OPEN;
+		position = vec3(tileProp.x_Coord, 0, tileProp.y_Coord);
 	}
 
 	MapTile(int x, int y, TileType type )
@@ -39,6 +39,8 @@ public:
 		tileProp.x_Coord = x;
 		tileProp.y_Coord = y;
 		tileProp.type = type;
+		
+		position = vec3(tileProp.x_Coord, 0, tileProp.y_Coord);
 	}
 
 	bool isWalkable()
@@ -58,7 +60,8 @@ public:
 	//generate the static mesh on top of the tile
 	void GenerateStaticOBJ(vec3 pos, int modelID, std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& mat)
 	{
-		StaticObj* staticObj = new StaticObj(pos); 
+		position = vec3(pos.x,0.25f,pos.z);
+		StaticObj* staticObj = new StaticObj(position);
 		staticObj->Init(modelID, shader, mat);
 		this->SetType(BLOCKED);
 	}

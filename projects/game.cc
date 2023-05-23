@@ -36,8 +36,8 @@ Player p1(vec3(3, 1, 0));
 EnemyAI eList(vec3(-3, 1, 0), p1.position);
 
 //MapTile & MapGen
-MapGen mapGenerator(10, 10);
-MapTile maptile(1, 1, OPEN);
+MapGen mapGenerator(50, 50);
+//MapTile maptile(1, 1, OPEN);
 
 
 std::vector<PointLight> lights;
@@ -130,25 +130,8 @@ GameApp::Open()
 		//init enemies
 		eList.InitEnemyList(mainShader, material,3);
 
-		//testing map
-		maptile.GenerateStaticOBJ(vec3(0, 1, 0), 1, mainShader, material);
-		
-		// Debug ground
-		//BlinnPhongMaterial dbgMat;
-		//dbgMat.LoadShader(mainShader->program);
-
-	for (int x = 0; x < 10; x++)
-		{
-			for (int y = 0; y < 10; y++)
-			{
-				StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
-				groundTile->Init(
-					0,
-					mainShader,
-					material
-				);
-			}
-		}
+		//Map
+		mapGenerator.CreateTileMap(mainShader,material);
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -268,6 +251,7 @@ GameApp::Run()
 		p1.MoveRight(right);
 		//p1.Update(deltaSeconds);
 		
+
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
 			gm->Update(deltaSeconds);
