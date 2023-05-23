@@ -11,6 +11,9 @@
 #include "Gameobject/Player.h" 
 #include "Gameobject/EnemyAI.h"
 #include "Gameobject/StaticObj.h"
+//testing map tiles
+#include "Gameobject/MapGen.h"
+//#include "Gameobject/MapTile.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -31,6 +34,11 @@ Player p1(vec3(3, 1, 0));
 //EnemyAI e1(vec3(-6, 1, 0),p1.position);
 
 EnemyAI eList(vec3(-3, 1, 0), p1.position);
+
+//MapTile & MapGen
+MapGen mapGenerator(50, 50);
+//MapTile maptile(1, 1, OPEN);
+
 
 std::vector<PointLight> lights;
 
@@ -120,23 +128,10 @@ GameApp::Open()
 
 		//Enemy
 		//init enemies
-		eList.InitEnemyList(mainShader, material,3); 
-		// Debug ground
-		//BlinnPhongMaterial dbgMat;
-		//dbgMat.LoadShader(mainShader->program);
+		eList.InitEnemyList(mainShader, material,3);
 
-	for (int x = 0; x < 10; x++)
-		{
-			for (int y = 0; y < 10; y++)
-			{
-				StaticObj* groundTile = new StaticObj(vec3(-x, 0, y));
-				groundTile->Init(
-					"../assets/Kenney/grass.obj",
-					mainShader,
-					material
-				);
-			}
-		}
+		//Map
+		mapGenerator.CreateTileMap(mainShader,material);
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -256,6 +251,7 @@ GameApp::Run()
 		p1.MoveRight(right);
 		//p1.Update(deltaSeconds);
 		
+
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
 			gm->Update(deltaSeconds);
