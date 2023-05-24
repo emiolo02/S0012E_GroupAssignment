@@ -121,6 +121,7 @@ GameApp::Open()
 
 		//Enemy
 		eList.InitEnemyList(mainShader, material,3);
+		eList.SetMaterial(&material);
 
 		//Map
 		mapGenerator.CreateTileMap(mainShader,material);
@@ -231,6 +232,8 @@ GameApp::Run()
 		hasShot = manager->gamepad.trigger;
 		//p1.Update(deltaSeconds);
 		
+		if (Scene::Instance()->GetEnemyVec().size() == 0)
+			eList.NextWave(mainShader);
 
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{

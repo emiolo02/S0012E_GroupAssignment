@@ -67,9 +67,24 @@ void EnemyAI::Update(float dt)
 //Init Multiple enemies
 void EnemyAI::InitEnemyList(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& enemyMat, int amount)
 {
-	for (int i = 0; i < amount; i++)
+	initSpawnCount = amount;
+	for (int i = 0; i < initSpawnCount; i++)
 	{	
 		EnemyAI* newEnemy = new EnemyAI(vec3(rand()%5, 0, rand()%10), *targetRef);
 		newEnemy->Init(shader, enemyMat);
 	}
+}
+
+void EnemyAI::SetMaterial(BlinnPhongMaterial* mat)
+{
+	this->material = *mat;
+}
+
+void EnemyAI::NextWave(std::shared_ptr<ShaderResource> shader)
+{
+	int cur_Wave = Scene::Instance()->GetWaveCount();
+	initSpawnCount += cur_Wave;
+
+	InitEnemyList(shader, material, initSpawnCount);
+	
 }

@@ -12,9 +12,11 @@ class EnemyAI : public GameObj
 
 	//rotation (quaternion)
 	const float speed = 1;
-
 	std::string modelPath;
 	std::string texturePath;
+
+	BlinnPhongMaterial material;
+	int initSpawnCount;
 
 	//offset between the enemies (future)
 
@@ -31,6 +33,9 @@ public:
 	void Update(float dt) override;
 	void Destroy() override; //deallocate enemy data of the selected enemy
 
+	void SetMaterial(BlinnPhongMaterial* mat);
+	void NextWave(std::shared_ptr<ShaderResource> shader);
+
 	//void MoveTo(vec3& target, float dt);
 	//Check collision
 
@@ -38,3 +43,5 @@ public:
 	//Testing
 	void InitEnemyList(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat, int amount);
 };
+
+
