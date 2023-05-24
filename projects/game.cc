@@ -5,13 +5,13 @@
 
 #include "config.h"
 #include "game.h"
-#include "Resource/GraphicsNode.h"
 
 #include "Gameobject/Camera.h"
 #include "Gameobject/Player.h" 
-#include "Gameobject/EnemyAI.h"
 #include "Gameobject/StaticObj.h"
 #include "Gameobject/MapGen.h"
+
+#include "World/SpawnGen.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -22,13 +22,9 @@
 
 std::shared_ptr<ShaderResource> mainShader;
 
-GraphicsNode plane;
-
 Camera camera;
 
-Player p1(vec3(3, 1, 0));
-
-EnemyAI eList(vec3(-3, 1, 0), p1.position);
+Player* p1;
 
 MapGen mapGenerator(50, 50);
 
@@ -116,11 +112,15 @@ GameApp::Open()
 		BlinnPhongMaterial material;
 		material.LoadShader(mainShader->program);
 
+		//Spawn Genereator
+		SpawnGen::SetProperties(mainShader, &material);
+		
 		// Player
-		p1.Init(mainShader, material);
+		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0, 1));
+		p1 = SpawnGen::Instance()->GetPlayer();
 
 		//Enemy
-		eList.InitEnemyList(mainShader, material,3);
+		SpawnGen::Instance()->SpawnInitEnemy(3);
 
 		//Map
 		mapGenerator.CreateTileMap(mainShader,material);
@@ -142,7 +142,7 @@ GameApp::Open()
 		printf("Vertex errors:\n");
 		ShaderResource::ErrorLog(mainShader->vertexShader);
 		printf("Fragment errors:\n");
-		ShaderResource::ErrorLog(p1.renderableOBJ.mesh->primitives[0].material.shader);
+		ShaderResource::ErrorLog(p1->renderableOBJ.mesh->primitives[0].material.shader);
 
 		return true;
 	}
@@ -222,15 +222,16 @@ GameApp::Run()
 		//if (manager->mouse.held[Input::MouseButton::right])
 		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
 		
-
-		p1.MoveInput(inputLstick);
-		p1.AimInput(inputRstick);
+		p1->MoveInput(inputLstick);
+		p1->AimInput(inputRstick);
 
 		if (manager->gamepad.trigger && !hasShot)
-			p1.Shoot();
+			p1->Shoot();
 		hasShot = manager->gamepad.trigger;
 		//p1.Update(deltaSeconds);
 		
+		if (Scene::Instance()->GetEnemyVec().size() == 0)
+			SpawnGen::Instance()->SpawnNextWave();
 
 		for(auto& gm : Scene::Instance()->GetGameObjVec())
 		{
@@ -238,7 +239,7 @@ GameApp::Run()
 			gm->renderableOBJ.Draw(camera);
 		}
 		
-		camera.Follow(p1.position, deltaSeconds);
+		camera.Follow(p1->position, deltaSeconds);
 
 		if (!useSun)
 		{

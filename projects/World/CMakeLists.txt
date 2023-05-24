@@ -6,6 +6,7 @@ ADD_LIBRARY(
     World
     Dummy.cc
     Scene.h
+    SpawnGen.h
 )
 
 TARGET_LINK_LIBRARIES(World core render)

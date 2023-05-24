@@ -86,11 +86,24 @@ public:
 	    return enemies;
 	}
 
+    //Testing wave count
+    int GetWaveCount()
+    {
+        return waveCount;
+    }
+
+    void incrementWave()
+    {
+        waveCount++;
+    }
+
 private:
 	static Scene* instance; //declare 
 	std::vector<GameObj*> gameObjects; //GameOBJ Placeholder //Keep track of all the object in the game
     std::vector<Physics::Collider*> colliders;
     
+    int waveCount = 1; //enemy wave nr
+
     Camera* mainCamera;
 	std::vector<EnemyAI*> enemies;
 	~Scene() {}
