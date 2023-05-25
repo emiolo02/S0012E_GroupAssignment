@@ -12,6 +12,7 @@
 #include "Gameobject/MapGen.h"
 
 #include "World/SpawnGen.h"
+#include "World/UserInterface.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -26,8 +27,9 @@ Camera camera;
 
 Player* p1;
 
-MapGen mapGenerator(50, 50);
+MapGen mapGenerator(10, 10);
 
+UserInterface score;
 
 std::vector<PointLight> lights;
 
@@ -129,7 +131,8 @@ GameApp::Open()
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
 		Scene::Instance()->SetMainCamera(&camera);
-		
+		score.Init(mainShader, material);
+
 		for (auto& gm : Scene::Instance()->GetGameObjVec())
 		{
 			ShaderResource::LinkProgram(
@@ -168,14 +171,13 @@ void
 GameApp::Run()
 {
 	glEnable(GL_DEPTH_TEST);
-	glfwSwapInterval(0);
+	//glfwSwapInterval(0);
 
 	bool useSun = false;
 	float deltaSeconds = 0;
 	vec2 inputLstick;
 	vec2 inputRstick;
 	bool hasShot = false;
-
 	while (this->window->IsOpen())
 	{
 		// Calculate dt
@@ -219,14 +221,17 @@ GameApp::Run()
 		}
 		
 
-		//if (manager->mouse.held[Input::MouseButton::right])
-		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
+		if (manager->mouse.held[Input::MouseButton::right])
+			camera.FreeFly(vec3(0, 0, 0), manager->mouse.dx, manager->mouse.dy, 0.05);
 		
 		p1->MoveInput(inputLstick);
 		p1->AimInput(inputRstick);
 
 		if (manager->gamepad.trigger && !hasShot)
-			p1->Shoot();
+		{
+			if (p1->Shoot())
+				score.IncScore();
+		}
 		hasShot = manager->gamepad.trigger;
 		//p1.Update(deltaSeconds);
 		

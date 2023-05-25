@@ -53,5 +53,7 @@ Camera::Follow(vec3 target, float dt)
 {
 	this->position = Lerp(this->position, target + followOffset, dt*5);
 
+	this->direction = normalize(target - this->position);
+
 	this->view = lookat(this->position, target, this->up);
 }

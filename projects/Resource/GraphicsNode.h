@@ -27,6 +27,7 @@ public:
 	void SetRotationX(float deg);
 	void SetRotationY(float deg);
 	void SetRotationZ(float deg);
+	void SetRotMat(const mat4& m);
 
 	void RotateAxis(vec3 v, float rad);
 

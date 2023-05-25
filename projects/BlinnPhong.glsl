@@ -82,5 +82,8 @@ void main()
 
 	lights += CalcSun(sun, norm, outPosition);
 
-	color = texture(u_texture, outTexCoord) * vec4(lights, 1);
+	vec4 texColor = texture(u_texture, outTexCoord);
+	if (texColor.a < 0.1)
+		discard;
+	color = texColor * vec4(lights, 1);
 };

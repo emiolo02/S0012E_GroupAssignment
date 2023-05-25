@@ -74,7 +74,7 @@ Player::AimInput(vec2 value)
 	aimInput = normalize(value);
 }
 
-void
+bool
 Player::Shoot()
 {
 	// TODO: Ugly ass code fix this garbage
@@ -94,4 +94,6 @@ Player::Shoot()
 	}
 	if (isHit)
 		closest.object->Destroy();
+
+	return isHit;
 }
