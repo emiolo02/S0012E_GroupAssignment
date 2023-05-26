@@ -4,6 +4,10 @@
 
 //Read from file, + only read this file once to generate the map
 //only read model once 
+
+//wavefunction collapse 
+//infinite playground (regenerate map when goes out of bound)
+
 class MapGen
 {
 	public:
@@ -21,7 +25,7 @@ class MapGen
 				for(int y = 0; y < map_HT; y++)
 				{
 					MapTile* tile = new MapTile(x, y, OPEN);
-					bool createBlockTile = (x % 5 == 0 && y % 5 == 0);
+					bool createBlockTile = (rand()%15 == 0);
 					if(createBlockTile)
 					{
 						tile->SetType(BLOCKED);
