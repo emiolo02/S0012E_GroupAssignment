@@ -14,6 +14,12 @@ class Collider;
 class Player;
 class EnemyAI;
 
+enum GameState
+{
+    Active,
+    GameOver
+};
+
 //Singleton
 class Scene
 {
@@ -76,9 +82,9 @@ public:
         mainCamera = cam;
     }
 
-    Camera GetMainCamera()
+    Camera* GetMainCamera()
     {
-        return *mainCamera;
+        return mainCamera;
     }
 
 	std::vector<EnemyAI*> GetEnemyVec()
@@ -97,12 +103,24 @@ public:
         waveCount++;
     }
 
+    GameState* GetGameState()
+    {
+        return &gameState;
+    }
+
+    void SetGameState(GameState gs)
+    {
+        gameState = gs;
+    }
+
 private:
 	static Scene* instance; //declare 
 	std::vector<GameObj*> gameObjects; //GameOBJ Placeholder //Keep track of all the object in the game
     std::vector<Physics::Collider*> colliders;
     
     int waveCount = 1; //enemy wave nr
+
+    GameState gameState;
 
     Camera* mainCamera;
 	std::vector<EnemyAI*> enemies;

@@ -342,6 +342,20 @@ inline mat4 translate(const vec3& v)
 	return result;
 }
 
+inline mat4 orthographic(const float aspect, const float scale,const float near, const float far)
+{
+	const float top = scale;
+	const float bottom = -top;
+	const float right = top * aspect;
+	const float left = bottom * aspect;
+	return mat4(
+		vec4(2 / (right-left), 0, 0, -(right+left)/(right-left)),
+		vec4(0, 2 / (top - bottom), 0, -(top+bottom)/(top - bottom)),
+		vec4(0, 0, -2 / (far-near), -(far + near)/(far-near)),
+		vec4(0, 0, 0, 1)
+	);
+
+}
 inline mat4 perspective(const float FOVy, const float aspect, const float near, const float far)
 {
 	float top = tan(FOVy / 2) * near;

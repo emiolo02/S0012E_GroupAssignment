@@ -5,20 +5,28 @@
 #include "core/math/mat4.h"
 namespace Input
 {
+	struct Button
+	{
+		bool pressed;
+		bool held;
+		bool released;
+	};
+
 	class Gamepad
 	{
 		int gp_ID;
-
+		bool lastBtnVal;
 	public:
 		vec2 leftStick , rightStick;
 		bool trigger;
-
+		Button Abtn;
 		Gamepad(){}
 
 		void Update()
 		{
 			gp_ID = glfwJoystickPresent(GLFW_JOYSTICK_1);
 			AxisValue();
+			ActionValue();
 		}
 
 		void AxisValue()
@@ -43,6 +51,29 @@ namespace Input
 				rightStick = rawRstick;
 
 			trigger = (axes[4] > 0.5 || axes[5] > 0.5);
+		}
+
+		void ActionValue()
+		{
+			int count;
+			const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
+			bool btnVal = (bool)buttons[0];
+			Abtn.pressed = false;
+			Abtn.released = false;
+
+			if (btnVal && !lastBtnVal)
+			{
+				Abtn.pressed = true;
+			}
+			if (!btnVal && lastBtnVal)
+			{
+				Abtn.released = true;
+			}
+			Abtn.held = btnVal;
+			lastBtnVal = btnVal;
+
+			if (!trigger)
+				trigger = ((bool)buttons[6] || (bool)buttons[7]);
 		}
 	};
 }

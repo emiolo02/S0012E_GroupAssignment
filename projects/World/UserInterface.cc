@@ -5,8 +5,8 @@ UserInterface::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& 
 {
 	for (int i = 0; i < 3; i++)
 	{
-		Sprite* sprite = new Sprite();
-		sprite->Init(vec3(-0.5 + 0.06 * i, 0 - 0.05*i, -0.5), shader, mat);
+		Sprite* sprite = new Number();
+		sprite->Init(vec3(-0.5 + 0.077 * i, 0 - 0.01*i, -0.5), shader, mat);
 		sprites.push_back(sprite);
 	}
 }
@@ -21,7 +21,7 @@ UserInterface::IncScore()
 
 	int tmp2 = (score / 100) % 10;
 
-	sprites[0]->ChangeTexture(tmp0);
-	sprites[1]->ChangeTexture(tmp1);
-	sprites[2]->ChangeTexture(tmp2);
+	sprites[0]->ChangeNum(tmp0);
+	sprites[1]->ChangeNum(tmp1);
+	sprites[2]->ChangeNum(tmp2);
 }

@@ -2,7 +2,7 @@
 
 Camera::Camera()
 {
-	this->projection = perspective(90 * PI / 180, 1024.0f / 768, 0.1f, 100);
+	this->projection = perspective(90 * PI / 180, 1024.0f / 768, 0.1f, 100);	
 	this->view = mat4();
 	this->up = vec3(0, 1, 0);
 	this->right = vec3(1, 0, 0);
@@ -56,4 +56,20 @@ Camera::Follow(vec3 target, float dt)
 	this->direction = normalize(target - this->position);
 
 	this->view = lookat(this->position, target, this->up);
+}
+
+void Camera::ChangePerspective(Projection proj)
+{
+	switch (proj)
+	{
+	case persp:
+		this->projection = perspective(90 * PI / 180, 1024.0f / 768, 0.1f, 100);
+		break;
+	case ortho:
+		this->projection = orthographic(1024.0f / 768.0f, 1, 0.1f, 100.0f);
+		break;
+	default:
+		break;
+	}
+
 }

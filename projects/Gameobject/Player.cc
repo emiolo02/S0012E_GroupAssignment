@@ -52,13 +52,24 @@ Player::Update(float dt)
 
 	vec3 rayDir = vec3(aimInput.x, 0, aimInput.y);
 	line.setLine(this->position, this->position + aimDir);
-	mat4 view = Scene::Instance()->GetMainCamera().view;
-	mat4 proj = Scene::Instance()->GetMainCamera().projection;
+	mat4 view = Scene::Instance()->GetMainCamera()->view;
+	mat4 proj = Scene::Instance()->GetMainCamera()->projection;
 
 
 	line.setMVP(proj * view);
 	line.draw();
 #endif // DEBUG
+}
+bool
+Player::Collision()
+{
+	return false;
+}
+
+void
+Player::Die()
+{
+	Scene::Instance()->SetGameState(GameOver);
 }
 
 void 
