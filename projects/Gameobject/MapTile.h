@@ -57,10 +57,10 @@ public:
 	}
 
 	//generate the static mesh on top of the tile
-	void GenerateStaticOBJ(vec3 pos, int modelID, std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& mat)
+	void GenerateStaticOBJ(vec3 pos, int modelID)
 	{
 		position = vec3(pos.x,0.25f,pos.z);
 		StaticObj* staticObj = new StaticObj(position);
-		staticObj->Init(modelID, shader, mat);
+		staticObj->Init(modelID);
 	}
 };

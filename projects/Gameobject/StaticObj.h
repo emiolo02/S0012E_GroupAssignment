@@ -50,9 +50,5 @@ public:
 	);
 
 	//testing with id
-	void Init(
-		int modelID,
-		std::shared_ptr<ShaderResource> shader,
-		BlinnPhongMaterial& mat
-	);
+	void Init(int modelID);
 };

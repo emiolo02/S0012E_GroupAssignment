@@ -18,8 +18,10 @@ class MapGen
 		~MapGen() {/*Delete the array when exit the game*/ }
 		MapGen(int x, int y) : map_WD(x), map_HT(y) {}
 
-		void CreateTileMap(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& mat)
+		void CreateTileMap()
 		{
+			auto resMan = ResourceManager::Instance();
+
 			for(int x = 0; x < map_WD; x++)
 			{
 				for(int y = 0; y < map_HT; y++)
@@ -30,12 +32,12 @@ class MapGen
 					{
 						tile->SetType(BLOCKED);
 						//Create building static mesh 
-						tile->GenerateStaticOBJ(tile->position, 1, shader, mat);
+						tile->GenerateStaticOBJ(tile->position, 1);
 					}
 					else
 					{
 						//Create walkable space
-						tile->GenerateStaticOBJ(tile->position, 0, shader, mat);
+						tile->GenerateStaticOBJ(tile->position, 0);
 					}
 
 					map.push_back(tile);
