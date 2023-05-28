@@ -21,15 +21,17 @@ Player::Player(vec3 pos)
 void 
 Player::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat)
 {
-	renderableOBJ.SetResources(shader,
-		std::make_shared<MeshResource>(MeshResource::LoadOBJ(modelPath)));
+	auto manager = ResourceManager::Instance();
+	manager->AddMesh(modelPath);
+	manager->AddTexture(texturePath);
 
-	//Setup material
-/*	playerMat.LoadShader(shader->program);*/
-	playerMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), texturePath.c_str());
+	renderableOBJ.SetResources(manager->GetShader(), manager->GetMesh(modelPath));
 
-	renderableOBJ.mesh->primitives[0].material = playerMat;
-	renderableOBJ.mesh->Upload();
+	//Setup material loader
+
+	renderableOBJ.mesh->primitives[0].material = manager->GetMaterial();
+	renderableOBJ.mesh->primitives[0].material.texture = manager->GetTexture(texturePath);
+
 	Scene::Instance()->AddObj(this);
 
 #ifdef DEBUG

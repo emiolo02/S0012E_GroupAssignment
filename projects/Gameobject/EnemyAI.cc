@@ -26,14 +26,16 @@ EnemyAI::Destroy()
 //Init data for the GraphicsNode 
 void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& enemyMat)
 {
-	renderableOBJ.SetResources(shader,
-		std::make_shared<MeshResource>(MeshResource::LoadOBJ(modelPath)));
+	auto manager = ResourceManager::Instance();
+	manager->AddMesh(modelPath);
+	manager->AddTexture(texturePath);
+
+	renderableOBJ.SetResources(manager->GetShader(), manager->GetMesh(modelPath));
 
 	//Setup material loader
-	enemyMat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), texturePath.c_str());
 
-	renderableOBJ.mesh->primitives[0].material = enemyMat;
-	renderableOBJ.mesh->Upload();
+	renderableOBJ.mesh->primitives[0].material = manager->GetMaterial();
+	renderableOBJ.mesh->primitives[0].material.texture = manager->GetTexture(texturePath);
 
 	renderableOBJ.Translate(position);
 

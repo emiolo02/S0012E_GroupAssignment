@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include "ResourceManager.h"
 
 class GameObj; //Forward declare
 class Camera;

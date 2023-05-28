@@ -15,10 +15,10 @@ public:
 		return &instance;
 	}
 
-	static void SetProperties(std::shared_ptr<ShaderResource> shader,BlinnPhongMaterial* mat)
+	static void SetProperties() // remove
 	{
-		SpawnGen::Instance()->shaderPGR = shader;
-		SpawnGen::Instance()->entity_mat = *mat; 
+		//SpawnGen::Instance()->shaderPGR = shader;
+		//SpawnGen::Instance()->entity_mat = *mat; 
 	}
 
 	void SpawnInitEnemy(int count)

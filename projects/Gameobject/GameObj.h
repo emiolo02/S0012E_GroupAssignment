@@ -4,10 +4,8 @@
 #include <vector>
 #include <iostream>
 
-#include "../Resource/GraphicsNode.h"
 #include "../Physics/Physics.h"
 #include "../World/Scene.h"
-#include "../Gameobject/Camera.h"
 
 //testing
 class GameObj
