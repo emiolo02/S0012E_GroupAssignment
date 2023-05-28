@@ -54,8 +54,9 @@ public:
 	{
 		if (texture.find(path) != texture.end()) 
 			return; // Ignore if texture already loaded
-
-		texture[path] = std::make_shared<TextureResource>(TextureResource(path.c_str()));
+		material.texture = std::make_shared<TextureResource>();
+		material.texture->LoadFromFile(path.c_str(), 0);
+		texture[path] = material.texture;
 	}
 
 	std::shared_ptr<TextureResource> GetTexture(std::string path)
