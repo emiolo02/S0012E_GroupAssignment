@@ -1,6 +1,6 @@
 #include "Player.h"
 
-#define DEBUG
+//#define DEBUG
 
 //Creates player at world origin
 Player::Player()
