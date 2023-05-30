@@ -123,6 +123,8 @@ GameApp::Open()
 		// Player
 		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0.5, 1));
 		p1 = SpawnGen::Instance()->GetPlayer();
+		score.Init();
+		gameOver.Init(vec3(0, 0, 0));
 
 		//Enemy
 		SpawnGen::Instance()->SpawnInitEnemy(3);
@@ -135,8 +137,6 @@ GameApp::Open()
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
 		Scene::Instance()->SetMainCamera(&camera);
 
-		score.Init();
-		gameOver.Init(vec3(0, 0, 0));
 		
 		ShaderResource::LinkProgram(resMan->GetShader()->program, resMan->GetShader()->vertexShader, resMan->GetMaterial().shader);
 		
@@ -173,7 +173,7 @@ void
 GameApp::Run()
 {
 	glEnable(GL_DEPTH_TEST);
-	//glfwSwapInterval(0);
+	glfwSwapInterval(0);
 
 	bool useSun = false;
 	float deltaSeconds = 0;
@@ -229,6 +229,11 @@ GameApp::Run()
 
 		//if (manager->mouse.held[Input::MouseButton::right])
 		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
+		float cutoffpX = camera.viewCut.pX + camera.position.x;
+		float cutoffpY = camera.viewCut.pY + camera.position.z;
+		float cutoffnX = camera.viewCut.nX + camera.position.x;
+		float cutoffnY = camera.viewCut.nY + camera.position.z;
+
 		switch (*gameState)
 		{
 			case GameState::Active:
@@ -246,9 +251,20 @@ GameApp::Run()
 				if (Scene::Instance()->GetEnemyVec().size() == 0)
 					SpawnGen::Instance()->SpawnNextWave();
 
+				
+
 				for (auto& gm : Scene::Instance()->GetGameObjVec())
 				{
 					gm->Update(deltaSeconds);
+					float posX = gm->position.x - camera.position.x;
+					float posY = gm->position.z - camera.position.z;
+
+					if (gm->position.x > cutoffpX ||
+						gm->position.z > cutoffpY ||
+						gm->position.x < cutoffnX ||
+						gm->position.z < cutoffnY)
+						continue;
+
 					gm->renderableOBJ.Draw(camera);
 				}
 
@@ -319,7 +335,7 @@ GameApp::Run()
 
 		float avgDT = (deltaSeconds + lastDT) / 2;
 		//std::cout << deltaSeconds << " s" << std::endl;
-		//std::cout << 1/avgDT << " fps" << std::endl;
+		std::cout << 1/avgDT << " fps" << std::endl;
 #ifdef CI_TEST
 		// if we're running CI, we want to return and exit the application after one frame
 		// break the loop and hopefully exit gracefully

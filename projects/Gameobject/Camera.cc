@@ -2,10 +2,19 @@
 
 Camera::Camera()
 {
-	this->projection = perspective(90 * PI / 180, 1024.0f / 768, 0.1f, 100);	
+	float fovY = 90;
+	this->projection = perspective(fovY * PI / 180, 1024.0f / 768, 0.1f, 100);	
 	this->view = mat4();
 	this->up = vec3(0, 1, 0);
 	this->right = vec3(1, 0, 0);
+
+	float theta0 = atan2(fabs(followOffset.x), fabs(followOffset.y));
+	viewCut.nY = -tan(fovY * PI / 360 - theta0) * followOffset.y-2;
+	viewCut.pY =  tan(fovY * PI / 360 + theta0) * followOffset.y+8;
+	
+	float theta1 = fovY * (1024.0f / 768) * PI / 180;
+	viewCut.nX =  tan(theta1) * followOffset.y-4;
+	viewCut.pX = -tan(theta1) * followOffset.y+4;
 }
 
 void
@@ -51,11 +60,13 @@ Camera::Orbit(float speed, float height, float radius, float time)
 void 
 Camera::Follow(vec3 target, float dt)
 {
-	this->position = Lerp(this->position, target + followOffset, dt*5);
+	this->position = Lerp(this->position, target + followOffset, dt*10);
 
 	this->direction = normalize(target - this->position);
 
 	this->view = lookat(this->position, target, this->up);
+
+	projView = projection * view;
 }
 
 void Camera::ChangePerspective(Projection proj)

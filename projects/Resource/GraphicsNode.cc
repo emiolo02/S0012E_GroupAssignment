@@ -27,12 +27,12 @@ void GraphicsNode::Draw(Camera cam)
 	for (auto& primitive : this->mesh->primitives)
 		primitive.material.Apply(this->shader->program);
 
-	this->model = this->translation * this->rotation * this->scale;
+	//this->model = this->rotation * this->scale;
+	mat4 MVP = cam.projView * this->model;
+	ShaderResource::Matrix4fv("MVP", MVP, this->shader->program);
+	ShaderResource::Matrix4fv("model", this->model, this->shader->program);
 
-	ShaderResource::Matrix4fv("model"     , this->model   , this->shader->program);
-	ShaderResource::Matrix4fv("view"      , cam.view      , this->shader->program);
-	ShaderResource::Matrix4fv("projection", cam.projection, this->shader->program);
-	ShaderResource:: Vector3f("cameraPos" , cam.position  , this->shader->program);
+
 	for (auto& primitive : this->mesh->primitives)
 		primitive.material.texture->BindTexture();
 
@@ -84,6 +84,15 @@ void
 GraphicsNode::SetRotMat(const mat4& m)
 {
 	this->rotation = m;
+}
+
+void GraphicsNode::SetModel(vec3 pos, vec3 rot, vec3 scale)
+{
+	this->model =mat4(
+		vec4(scale.x, 0, 0, 0),
+		vec4(0, scale.y, 0, 0),
+		vec4(0, 0, scale.z, 0),
+		vec4(pos.x, pos.y, pos.z, 1));
 }
 
 void

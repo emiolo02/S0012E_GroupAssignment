@@ -31,7 +31,7 @@ void StaticObj::Init(
 
 	renderableOBJ.mesh->primitives[0].material = mat;
 	renderableOBJ.mesh->Upload();
-	renderableOBJ.Translate(position);
+	renderableOBJ.SetModel(position, rotation, scale);
 	Scene::Instance()->AddObj(this);
 }
 
@@ -51,7 +51,7 @@ void StaticObj::Init(
 
 	renderableOBJ.mesh->primitives[0].material = mat;
 	renderableOBJ.mesh->Upload();
-	renderableOBJ.Translate(position);
+	renderableOBJ.SetModel(position, rotation, scale);
 	Scene::Instance()->AddObj(this);
 }
 
@@ -68,6 +68,6 @@ void StaticObj::Init(int modelID)
 
 	renderableOBJ.mesh->primitives[0].material = resMan->GetMaterial();
 	renderableOBJ.mesh->primitives[0].material.texture = resMan->GetTexture(texturePath);
-	renderableOBJ.Translate(position);
+	renderableOBJ.SetModel(position, rotation, scale);
 	Scene::Instance()->AddObj(this);
 }

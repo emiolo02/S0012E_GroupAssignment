@@ -1,6 +1,6 @@
 #include "Player.h"
 
-//#define DEBUG
+#define DEBUG
 
 //Creates player at world origin
 Player::Player()
@@ -54,7 +54,7 @@ Player::Update(float dt)
 	Collision();
 	this->position = vec3(predictedPosition.x, position.y, predictedPosition.y);
 
-	renderableOBJ.Translate(position);
+	renderableOBJ.SetModel(position, rotation, scale);
 	vec3 aimDir = vec3(aimInput.x, 0, aimInput.y)*10;
 
 	gun->position = this->position + vec3(aimInput.x, 0.3, aimInput.y)*0.5;
@@ -105,9 +105,9 @@ void Player::Collision()
 	line.setMVP(proj * view);
 #endif // DEBUG
 
-	for (int x = -2; x < 2; x++)
+	for (int x = -1; x < 3; x++)
 	{
-		for (int y = -2; y < 2; y++)
+		for (int y = -1; y < 3; y++)
 		{
 			vec2i cell = vec2i(tilePos.x + x, tilePos.y + y);
 			if (cell.x < 0 || cell.x >= mapDim.x || cell.y < 0 || cell.y >= mapDim.y)
@@ -239,8 +239,8 @@ Gun::Gun()
 	modelPath = "../assets/gun.obj";
 	texturePath = "../assets/black.png";
 	flash = PointLight();
-	flash.color = vec3(1, 1, 0);
-	flash.intensity = 1;
+	flash.color = vec3(1, 1, 1);
+	flash.intensity = -0.5;
 	flash.index = 2;
 }
 
@@ -263,6 +263,7 @@ void Gun::Update(float dt)
 {
 	flash.pos = this->position;
 	flash.Update(ResourceManager::Instance()->GetShader());
-	renderableOBJ.Translate(position);
-	renderableOBJ.SetRotationY(rotY);
+	//renderableOBJ.Translate(position);
+	//renderableOBJ.SetRotationY(rotY);
+	renderableOBJ.SetModel(position, rotation, scale);
 }

@@ -6,7 +6,7 @@ Number::Update(float dt)
 	Camera* cam = Scene::Instance()->GetMainCamera();
 	this->position = cam->position + cam->direction + screenPos;
 
-	renderableOBJ.Translate(this->position);
+	renderableOBJ.SetModel(this->position, vec3(0, 0, 0), vec3());
 }
 
 void 

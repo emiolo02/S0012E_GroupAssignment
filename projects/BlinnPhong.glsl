@@ -77,8 +77,8 @@ void main()
 {
 	vec3 lights = vec3(0);
 	vec3 norm = normalize(outNormal);
-	for (int i = 0; i < POINT_LIGHTS; i++)
-		lights += CalcPointLight(pointLights[i], norm, outPosition, cameraPos);
+	//for (int i = 0; i < POINT_LIGHTS; i++)
+	//	lights += CalcPointLight(pointLights[i], norm, outPosition, cameraPos);
 
 	lights += CalcSun(sun, norm, outPosition);
 

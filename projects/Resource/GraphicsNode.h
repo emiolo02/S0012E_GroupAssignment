@@ -29,6 +29,8 @@ public:
 	void SetRotationZ(float deg);
 	void SetRotMat(const mat4& m);
 
+	void SetModel(vec3 pos, vec3 rot, vec3 scale);
+
 	void RotateAxis(vec3 v, float rad);
 
 	void Translate(const vec3& v);

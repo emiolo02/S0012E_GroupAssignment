@@ -5,6 +5,7 @@ enum Projection
 	persp,
 	ortho
 };
+
 class Camera
 {
 public:
@@ -21,7 +22,18 @@ public:
 	mat4 projection;
 	mat4 view;
 
+	mat4 projView;
+	
+	struct ViewCutoff
+	{
+		float nX;
+		float pX;
+		float nY;
+		float pY;
+	};
+	ViewCutoff viewCut;
 private:
-	vec3 followOffset = vec3(0, 5, -2);
+	vec3 followOffset = vec3(0, 5, -1);
+	
 	float dirx, diry;
 };
