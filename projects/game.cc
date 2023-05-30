@@ -27,7 +27,7 @@ Camera camera;
 
 Player* p1;
 
-MapGen mapGenerator(10, 10);
+MapGen mapGenerator(50, 50);
 
 UserInterface score;
 
@@ -119,8 +119,6 @@ GameApp::Open()
 		//BlinnPhongMaterial material;
 		//material.LoadShader(mainShader->program);
 
-		//Spawn Genereator
-		SpawnGen::SetProperties();
 		
 		// Player
 		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0.5, 1));
@@ -184,6 +182,7 @@ GameApp::Run()
 	bool hasShot = false;
 
 	auto resMan = ResourceManager::Instance();
+	auto gameState = Scene::Instance()->GetGameState();
 
 	while (this->window->IsOpen())
 	{
@@ -230,56 +229,87 @@ GameApp::Run()
 
 		//if (manager->mouse.held[Input::MouseButton::right])
 		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
-
-		p1->MoveInput(inputLstick);
-		p1->AimInput(inputRstick);
-
-		if (manager->gamepad.trigger && !hasShot)
-			if (p1->Shoot())
-				score.IncScore();
-
-		hasShot = manager->gamepad.trigger;
-		//p1.Update(deltaSeconds);
-
-		if (Scene::Instance()->GetEnemyVec().size() == 0)
-			SpawnGen::Instance()->SpawnNextWave();
-
-		for (auto& gm : Scene::Instance()->GetGameObjVec())
+		switch (*gameState)
 		{
-			gm->Update(deltaSeconds);
-			gm->renderableOBJ.Draw(camera);
+			case GameState::Active:
+				p1->MoveInput(inputLstick);
+				p1->AimInput(inputRstick);
+
+
+				if (manager->gamepad.trigger && !hasShot)
+					if (p1->Shoot())
+						score.IncScore();
+
+				hasShot = manager->gamepad.trigger;
+				//p1.Update(deltaSeconds);
+
+				if (Scene::Instance()->GetEnemyVec().size() == 0)
+					SpawnGen::Instance()->SpawnNextWave();
+
+				for (auto& gm : Scene::Instance()->GetGameObjVec())
+				{
+					gm->Update(deltaSeconds);
+					gm->renderableOBJ.Draw(camera);
+				}
+
+				camera.Follow(p1->position, deltaSeconds);
+
+				if (!useSun)
+				{
+					sun.Disable(resMan->GetShader());
+					//sun.Disable(normalShader);
+
+					for (auto light : lights)
+					{
+						light.pos = vec3(2 * cos(glfwGetTime() + PI * light.index), .5f, 2 * sin(glfwGetTime() + PI * light.index));
+						light.Update(resMan->GetShader());
+						//light.Update(normalShader);
+					}
+				}
+				else
+				{
+					for (auto light : lights)
+					{
+						light.Disable(resMan->GetShader());
+						//light.Disable(normalShader);
+					}
+
+					if (manager->keyboard.pressed[Input::Key::Up])
+						sun.intensity++;
+					if (manager->keyboard.pressed[Input::Key::Down])
+						sun.intensity--;
+
+					sun.Update(resMan->GetShader());
+					//sun.Update(normalShader);
+				}
+			break;
+			case GameState::GameOver:
+				camera.position = vec3(0, 1, 0);
+				camera.ChangePerspective(Projection::ortho);
+				camera.view = lookat(camera.position, vec3(0, 0, 0), vec3(0, 0, -1));
+				gameOver.Draw(camera);
+
+				if (manager->gamepad.Abtn.pressed)
+				{
+					auto scene = Scene::Instance();
+
+					for (auto e : scene->GetEnemyVec())
+						e->Destroy();
+
+					scene->ResetWave();
+					SpawnGen::Instance()->ResetSpawnCount();
+
+					p1->position = vec3(3, 0.5, 1);
+
+					camera.ChangePerspective(Projection::persp);
+					mapGenerator.Reset();
+					*gameState = GameState::Active;
+				}
+			break;
+		default:
+			break;
 		}
-
-		camera.Follow(p1->position, deltaSeconds);
-
-		if (!useSun)
-		{
-			sun.Disable(resMan->GetShader());
-			//sun.Disable(normalShader);
-
-			for (auto light : lights)
-			{
-				light.pos = vec3(2 * cos(glfwGetTime() + PI * light.index), .5f, 2 * sin(glfwGetTime() + PI * light.index));
-				light.Update(resMan->GetShader());
-				//light.Update(normalShader);
-			}
-		}
-		else
-		{
-			for (auto light : lights)
-			{
-				light.Disable(resMan->GetShader());
-				//light.Disable(normalShader);
-			}
-
-			if (manager->keyboard.pressed[Input::Key::Up])
-				sun.intensity++;
-			if (manager->keyboard.pressed[Input::Key::Down])
-				sun.intensity--;
-
-			sun.Update(resMan->GetShader());
-			//sun.Update(normalShader);
-		}
+		
 		this->window->SwapBuffers();
 
 

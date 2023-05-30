@@ -95,6 +95,8 @@ Player::AimInput(vec2 value)
 
 void Player::Collision()
 {
+
+	// Collision with map
 	auto mapDim = Scene::Instance()->GetMapDimensions();
 	auto& mapCol = Scene::Instance()->GetMapColliders();
 #ifdef DEBUG
@@ -136,6 +138,16 @@ void Player::Collision()
 			}
 		}
 	}
+
+	// Collision with enemy
+	float closestDist = 9999;
+	for (auto e : Scene::Instance()->GetEnemyVec())
+	{
+		if (length(this->position - e->position) < closestDist)
+			closestDist = length(this->position - e->position);
+	}
+	if (closestDist < 0.5f)
+		Die();
 }
 
 bool

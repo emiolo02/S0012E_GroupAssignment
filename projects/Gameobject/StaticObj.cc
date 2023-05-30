@@ -10,6 +10,11 @@ StaticObj::StaticObj(vec3 pos)
 	this->position = pos;
 }
 
+StaticObj::~StaticObj()
+{
+	Scene::Instance()->DestroyObj(this);
+}
+
 void StaticObj::Init(
 	std::string modelPath,
 	std::string texturePath,

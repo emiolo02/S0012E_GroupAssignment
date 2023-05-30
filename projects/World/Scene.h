@@ -118,6 +118,11 @@ public:
         waveCount++;
     }
 
+    void ResetWave()
+    {
+        waveCount = 1;
+    }
+
     GameState* GetGameState()
     {
         return &gameState;

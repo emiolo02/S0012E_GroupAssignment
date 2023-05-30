@@ -2,6 +2,7 @@
 
 #include "GameObj.h"
 #include "../Light/PointLight.h"
+#include "EnemyAI.h"
 
 class Gun : public GameObj
 {

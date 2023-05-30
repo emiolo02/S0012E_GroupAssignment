@@ -59,7 +59,7 @@ public:
 	//generate the static mesh on top of the tile
 	void GenerateStaticOBJ(vec3 pos, int modelID)
 	{
-		position = vec3(pos.x,0.25f,pos.z);
+		position = vec3(pos.x, 0,pos.z);
 		StaticObj* staticObj = new StaticObj(position);
 		staticObj->Init(modelID);
 	}

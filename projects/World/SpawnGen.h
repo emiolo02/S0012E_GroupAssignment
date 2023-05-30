@@ -15,10 +15,9 @@ public:
 		return &instance;
 	}
 
-	static void SetProperties() // remove
+	void ResetSpawnCount()
 	{
-		//SpawnGen::Instance()->shaderPGR = shader;
-		//SpawnGen::Instance()->entity_mat = *mat; 
+		e_spawnCount = 2;
 	}
 
 	void SpawnInitEnemy(int count)
@@ -26,7 +25,7 @@ public:
 		e_spawnCount = count;
 		for(int i= 0; i < e_spawnCount; i++)
 		{
-			EnemyAI* enemy = new EnemyAI(vec3(rand() % 5, 0, rand() % 10), p_Ref->position);
+			EnemyAI* enemy = new EnemyAI(vec3(rand() % 5, 0.5, rand() % 10), p_Ref->position);
 			enemy->Init(shaderPGR, entity_mat);
 		}
 	}

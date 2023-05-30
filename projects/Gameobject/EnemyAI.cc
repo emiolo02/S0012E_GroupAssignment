@@ -61,7 +61,7 @@ void EnemyAI::Update(float dt)
 	tilePos = vec2i(this->position.x, this->position.z);
 	Collision();
 
-	this->position = vec3(predictedPosition.x, 0, predictedPosition.y);
+	this->position = vec3(predictedPosition.x, this->position.y, predictedPosition.y);
 	collider.position = vec2(position.x, position.z);
 	renderableOBJ.Translate(this->position);
 
