@@ -119,7 +119,7 @@ GameApp::Open()
 		SpawnGen::SetProperties();
 		
 		// Player
-		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0, 1));
+		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0.5, 1));
 		p1 = SpawnGen::Instance()->GetPlayer();
 
 		//Enemy
@@ -170,7 +170,7 @@ void
 GameApp::Run()
 {
 	glEnable(GL_DEPTH_TEST);
-	glfwSwapInterval(0);
+	//glfwSwapInterval(0);
 
 	bool useSun = false;
 	float deltaSeconds = 0;

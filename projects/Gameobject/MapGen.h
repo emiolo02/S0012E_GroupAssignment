@@ -20,7 +20,9 @@ class MapGen
 
 		void CreateTileMap()
 		{
-			auto resMan = ResourceManager::Instance();
+			Scene::Instance()->SetMapDimensions(map_WD, map_HT);
+			auto& worldMap = Scene::Instance()->GetMapColliders();
+			worldMap.resize(map_WD * map_HT, false);
 
 			for(int x = 0; x < map_WD; x++)
 			{
@@ -33,6 +35,7 @@ class MapGen
 						tile->SetType(BLOCKED);
 						//Create building static mesh 
 						tile->GenerateStaticOBJ(tile->position, 1);
+						worldMap[x + y * map_WD] = true;
 					}
 					else
 					{

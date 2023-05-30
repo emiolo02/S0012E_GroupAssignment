@@ -132,8 +132,128 @@ inline vec2 normalize(vec2 const& v)
 {
 	vec2 result = vec2();
 	float len = length(v);
+
+	if (len == 0)
+		return vec2();
+
 	result.x = v.x / len;
 	result.y = v.y / len;
 
 	return result;
 }
+
+class vec2i {
+public:
+	int x = 0;
+	int y = 0;
+
+	//Constructors
+	vec2i()
+	{
+		this->x = 0;
+		this->y = 0;
+	}
+
+	vec2i(const int x, const int y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+
+	vec2i(vec2i const& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+	}
+
+	//Operator overloads
+	vec2i& operator=(vec2 const& rhs)
+	{
+		this->x = rhs.x;
+		this->y = rhs.y;
+
+		return *this;
+	}
+
+	vec2i operator-()
+	{
+		return vec2i(-this->x, -this->y);
+	}
+
+	vec2i operator+(vec2 const& rhs)
+	{
+		return vec2i(this->x + rhs.x, this->y + rhs.y);
+	}
+	vec2i& operator+=(vec2 const& rhs)
+	{
+		this->x += rhs.x;
+		this->y += rhs.y;
+
+		return *this;
+	}
+
+	vec2i operator-(vec2i const& rhs)
+	{
+		vec2i result = vec2i();
+		result.x = this->x - rhs.x;
+		result.y = this->y - rhs.y;
+
+		return result;
+	}
+
+	const vec2i operator-(vec2i const& rhs) const
+	{
+		vec2i result = vec2i();
+		result.x = this->x - rhs.x;
+		result.y = this->y - rhs.y;
+
+		return result;
+	}
+
+	vec2i& operator-=(vec2 const& rhs)
+	{
+		this->x -= rhs.x;
+		this->y -= rhs.y;
+
+		return *this;
+	}
+
+	vec2i operator*(const float scalar)
+	{
+		vec2i result = vec2i();
+		result.x = this->x * scalar;
+		result.y = this->y * scalar;
+
+		return result;
+	}
+
+	vec2i& operator*=(const float scalar)
+	{
+		this->x *= scalar;
+		this->y *= scalar;
+
+		return *this;
+	}
+
+	bool operator==(vec2i const& rhs)
+	{
+		return (this->x == rhs.x && this->y == rhs.y);
+	}
+
+	bool operator!=(vec2i const& rhs)
+	{
+		return !(this->x == rhs.x
+			&& this->y == rhs.y);
+	}
+
+	int& operator[](const unsigned int i)
+	{
+		switch (i)
+		{
+		case 0:
+			return this->x;
+		case 1:
+			return this->y;
+		}
+	}
+};
