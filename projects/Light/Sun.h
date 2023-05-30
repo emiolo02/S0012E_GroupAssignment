@@ -1,8 +1,10 @@
 #pragma once
 #include "core/math/mat4.h"
 #include "../Resource/ShaderResource.h"
-#include <string>
 #include "GLFW/glfw3.h"
+#include <string>
+#include <memory>
+
 
 class Sun
 {
