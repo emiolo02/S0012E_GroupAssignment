@@ -10,16 +10,27 @@
 
 class MapGen
 {
+	//test singleton
+	static MapGen* instance;
+	int map_WD, map_HT;
+	std::vector<MapTile*> map;
+	std::vector<MapTile*> neighbourTiles;
+
 	public:
-		int map_WD, map_HT;
-		std::vector<MapTile*> map;
 		 
+		static MapGen* Instance()
+		{
+			static MapGen instance;
+			return &instance;
+		}
+
 		MapGen() {}
 		~MapGen() {/*Delete the array when exit the game*/ }
-		MapGen(int x, int y) : map_WD(x), map_HT(y) {}
+		//MapGen(int x, int y) : map_WD(x), map_HT(y) {}
 
-		void CreateTileMap()
+		void CreateTileMap(int width, int height)
 		{
+			map_WD = width; map_HT = height;
 			auto resMan = ResourceManager::Instance();
 
 			for(int x = 0; x < map_WD; x++)
@@ -43,5 +54,35 @@ class MapGen
 					map.push_back(tile);
 				}
 			}
+		}
+
+		//Testing for astar
+		int GetLastElement() { return (map.back()-1)->tileProp.id; }
+
+		MapTile GetMapElement(int id) 
+		{
+			return *map[id];
+		} //Get the tile at index
+
+		std::vector<MapTile*> GetNeighbours(MapTile& tile)
+		{
+			std::vector<MapTile*> neighbours;
+
+			for(int x = -1; x <= 1; x++)
+			{
+				for(int y = -1; y <= 1; y++)
+				{
+					if (x == 0 && y == 0)
+						continue;
+					
+					int checkX = tile.tileProp.x_Coord + x;
+					int checkY = tile.tileProp.y_Coord + y;
+
+					if (checkX >= 0 && checkX < map_WD &&
+						checkY >= 0 && checkY < map_HT)
+						neighbours.insert(neighbours.begin(), &tile);
+				}
+			}
+			return neighbours;
 		}
 };

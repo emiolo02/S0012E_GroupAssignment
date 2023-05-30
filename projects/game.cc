@@ -12,6 +12,8 @@
 #include "Gameobject/MapGen.h"
 
 #include "World/SpawnGen.h"
+//Testing
+#include "World/Pathfinding.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -26,7 +28,7 @@ Camera camera;
 
 Player* p1;
 
-MapGen mapGenerator(50, 50);
+//MapGen mapGenerator(50, 50); changed Mapgen to singleton
 
 
 std::vector<PointLight> lights;
@@ -126,8 +128,10 @@ GameApp::Open()
 		SpawnGen::Instance()->SpawnInitEnemy(3);
 
 		//Map
-		mapGenerator.CreateTileMap();
-
+		//mapGenerator.CreateTileMap();
+		MapGen::Instance()->CreateTileMap(50, 50);
+		Astar::Instance()->FindPath(p1->position, MapGen::Instance()->GetMapElement(100).position);
+		
 		// Camera
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);

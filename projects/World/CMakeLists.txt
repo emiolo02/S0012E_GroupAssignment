@@ -9,6 +9,8 @@ ADD_LIBRARY(
     SpawnGen.h
     ResourceManager.h
     ResourceManager.cc
+    Pathfinding.h
+    Pathfinding.cc
 )
 
 TARGET_LINK_LIBRARIES(World core render)

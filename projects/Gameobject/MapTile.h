@@ -10,10 +10,26 @@ enum TileType
 
 struct TileProperties
 {
+	int id;
 	int x_Coord;
 	int y_Coord;
 	TileType type;
+	TileProperties() : id(++s_id) {}
+	
+	/*
+	* g = distance from start tile
+	* h = distance from end tile
+	* f = total cost (g + h)
+	*/
+	int g_Cost, h_Cost, f_Cost;
+
+protected:
+	static std::atomic<int> s_id;
+
 };
+
+//initialize atomic integer 
+std::atomic<int> TileProperties::s_id;
 
 //FANCY SHIT A* PROPERTIES //TO IMPLEMENT LATER
 
@@ -62,5 +78,11 @@ public:
 		position = vec3(pos.x,0.25f,pos.z);
 		StaticObj* staticObj = new StaticObj(position);
 		staticObj->Init(modelID);
+	}
+
+	//Astar Calculate costs
+	int CalculateFCost()
+	{
+		return (tileProp.f_Cost + tileProp.h_Cost);
 	}
 };
