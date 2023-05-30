@@ -7,6 +7,8 @@ ADD_LIBRARY(
     Dummy.cc
     Scene.h
     SpawnGen.h
+    UserInterface.h
+    UserInterface.cc
     ResourceManager.h
     ResourceManager.cc
 )

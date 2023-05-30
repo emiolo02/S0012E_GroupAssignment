@@ -81,6 +81,12 @@ GraphicsNode::SetRotationZ(float deg)
 }
 
 void
+GraphicsNode::SetRotMat(const mat4& m)
+{
+	this->rotation = m;
+}
+
+void
 GraphicsNode::RotateAxis(vec3 v, float rad)
 {
 	this->rotation = this->rotation * rotationaxis(v, rad);

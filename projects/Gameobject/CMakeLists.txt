@@ -17,6 +17,8 @@ ADD_LIBRARY(
     MapTile.cc
     Camera.h
     Camera.cc
+    Sprite.h
+    Sprite.cc
 )
 
 TARGET_LINK_LIBRARIES(Gameobject core render)

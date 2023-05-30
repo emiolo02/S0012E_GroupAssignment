@@ -12,6 +12,7 @@
 #include "Gameobject/MapGen.h"
 
 #include "World/SpawnGen.h"
+#include "World/UserInterface.h"
 
 #include "Light/PointLight.h"
 #include "Light/Sun.h"
@@ -26,8 +27,11 @@ Camera camera;
 
 Player* p1;
 
-MapGen mapGenerator(50, 50);
+MapGen mapGenerator(10, 10);
 
+UserInterface score;
+
+GameOverScreen gameOver;
 
 std::vector<PointLight> lights;
 
@@ -132,11 +136,12 @@ GameApp::Open()
 		camera.position = vec3(-2, 2, -2);
 		camera.view = lookat(camera.position, vec3(-2, 0, 2), camera.up);
 		Scene::Instance()->SetMainCamera(&camera);
+
+		score.Init(mainShader, material);
+		gameOver.Init(vec3(0, 0, 0), mainShader, material);
 		
 		ShaderResource::LinkProgram(resMan->GetShader()->program, resMan->GetShader()->vertexShader, resMan->GetMaterial().shader);
-		//for (auto& gm : Scene::Instance()->GetGameObjVec())
-		//{
-		//}
+		
 
 		printf("Vertex errors:\n");
 		ShaderResource::ErrorLog(resMan->GetShader()->vertexShader);
@@ -177,6 +182,8 @@ GameApp::Run()
 	vec2 inputLstick;
 	vec2 inputRstick;
 	bool hasShot = false;
+	
+	GameState* state = Scene::Instance()->GetGameState();
 
 	auto resMan = ResourceManager::Instance();
 
@@ -217,28 +224,12 @@ GameApp::Run()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (manager->keyboard.pressed[Input::Key::Return])
+		switch (*state)
 		{
-			useSun = !useSun;
-		}
-		
-
-		//if (manager->mouse.held[Input::MouseButton::right])
-		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
-		
-		p1->MoveInput(inputLstick);
-		p1->AimInput(inputRstick);
-
-		if (manager->gamepad.trigger && !hasShot)
-			p1->Shoot();
-		hasShot = manager->gamepad.trigger;
-		//p1.Update(deltaSeconds);
-		
-		if (Scene::Instance()->GetEnemyVec().size() == 0)
-			SpawnGen::Instance()->SpawnNextWave();
-
-		for(auto& gm : Scene::Instance()->GetGameObjVec())
-		{
+		case Active:
+			if (manager->keyboard.pressed[Input::Key::Return])
+			{
+				useSun = !useSun;
 			gm->Update(deltaSeconds);
 			gm->renderableOBJ.Draw(camera);
 		}
@@ -255,12 +246,75 @@ GameApp::Run()
 				light.pos = vec3(2*cos(glfwGetTime() + PI * light.index), .5f, 2*sin(glfwGetTime() + PI * light.index));
 				light.Update(resMan->GetShader());
 				//light.Update(normalShader);
+
 			}
-		}
-		else
-		{
-			for (auto light : lights)
+
+			if (manager->mouse.held[Input::MouseButton::right])
+				camera.FreeFly(vec3(0, 0, 0), manager->mouse.dx, manager->mouse.dy, 0.05);
+			if (p1 != nullptr)
 			{
+				p1->MoveInput(inputLstick);
+				p1->AimInput(inputRstick);
+
+				if (manager->gamepad.trigger && !hasShot)
+				{
+					if (p1->Shoot())
+						score.IncScore();
+				}
+				hasShot = manager->gamepad.trigger;
+
+				if (manager->gamepad.Abtn.pressed)
+					p1->Die();
+
+				if (Scene::Instance()->GetEnemyVec().size() == 0)
+					SpawnGen::Instance()->SpawnNextWave();
+
+				for (auto& gm : Scene::Instance()->GetGameObjVec())
+				{
+					gm->Update(deltaSeconds);
+					gm->renderableOBJ.Draw(camera);
+				}
+
+				camera.Follow(p1->position, deltaSeconds);
+
+				if (!useSun)
+				{
+					sun.Disable(mainShader);
+					//sun.Disable(normalShader);
+
+					for (auto light : lights)
+					{
+						light.pos = vec3(2 * cos(glfwGetTime() + PI * light.index), .5f, 2 * sin(glfwGetTime() + PI * light.index));
+						light.Update(mainShader);
+						//light.Update(normalShader);
+					}
+				}
+				else
+				{
+					for (auto light : lights)
+					{
+						light.Disable(mainShader);
+						//light.Disable(normalShader);
+					}
+
+					if (manager->keyboard.pressed[Input::Key::Up])
+						sun.intensity++;
+					if (manager->keyboard.pressed[Input::Key::Down])
+						sun.intensity--;
+
+					sun.Update(mainShader);
+					//sun.Update(normalShader);
+				}
+			}
+			break;
+		case GameOver:
+			camera.position = vec3(0, 1, 0);
+			camera.ChangePerspective(Projection::ortho);
+			camera.view = lookat(camera.position, vec3(0, 0, 0), vec3(0, 0, -1));
+			gameOver.Draw(camera);
+			break;
+		default:
+			break;
 				light.Disable(resMan->GetShader());
 				//light.Disable(normalShader);
 			}
@@ -272,7 +326,10 @@ GameApp::Run()
 
 			sun.Update(resMan->GetShader());
 			//sun.Update(normalShader);
+
 		}
+
+		
 		this->window->SwapBuffers();
 
 		

@@ -72,6 +72,17 @@ Player::Update(float dt)
 	line.draw();
 #endif // DEBUG
 }
+bool
+Player::Collision()
+{
+	return false;
+}
+
+void
+Player::Die()
+{
+	Scene::Instance()->SetGameState(GameOver);
+}
 
 void 
 Player::MoveInput(vec2 value)
@@ -86,6 +97,8 @@ Player::AimInput(vec2 value)
 	aimInput = normalize(value);
 }
 
+
+=======
 void Player::Collision()
 {
 	auto mapDim = Scene::Instance()->GetMapDimensions();

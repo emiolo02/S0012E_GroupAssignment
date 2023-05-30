@@ -57,6 +57,7 @@ namespace Input
 		{
 			int count;
 			const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
+
 			if (count == 0)
 				return;
 

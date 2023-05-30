@@ -29,9 +29,9 @@ public:
 
 	void MoveInput(vec2 value);
 	void AimInput(vec2 value);
-
-	void Collision();
-	void Shoot();
+	void Die();
+	bool Collision();
+	bool Shoot();
 private:
 	//model
 	std::string modelPath;

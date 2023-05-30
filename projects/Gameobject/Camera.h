@@ -1,6 +1,10 @@
 #pragma once
 #include "core/math/mat4.h"
-
+enum Projection
+{
+	persp,
+	ortho
+};
 class Camera
 {
 public:
@@ -8,7 +12,7 @@ public:
 	void FreeFly(vec3 input, float dMouseX, float dMouseY, float speed);
 	void Orbit(float speed, float radius, float height, float time);
 	void Follow(vec3 target, float dt);
-
+	void ChangePerspective(Projection proj);
 	vec3 up;
 	vec3 right;
 	vec3 direction;
