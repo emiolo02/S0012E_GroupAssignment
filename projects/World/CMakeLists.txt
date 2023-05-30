@@ -9,6 +9,8 @@ ADD_LIBRARY(
     SpawnGen.h
     UserInterface.h
     UserInterface.cc
+    ResourceManager.h
+    ResourceManager.cc
 )
 
 TARGET_LINK_LIBRARIES(World core render)

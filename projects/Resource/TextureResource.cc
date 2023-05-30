@@ -20,8 +20,10 @@ TextureResource::LoadFromFile(const char* imagePath, GLuint index)
 
 	glGenTextures(1, &textures[textures.size()-1].id);
 
+
 	glActiveTexture(GL_TEXTURE0 + textures[textures.size() - 1].index);
 	glBindTexture(GL_TEXTURE_2D, textures[textures.size() - 1].id);
+	
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -92,6 +94,7 @@ TextureResource::UnbindTexture()
 		glActiveTexture(GL_TEXTURE0 + this->textures[i].index);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+
 }
 
 TextureResource::~TextureResource()

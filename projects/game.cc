@@ -21,7 +21,7 @@
 
 #include <chrono>
 
-std::shared_ptr<ShaderResource> mainShader;
+//std::shared_ptr<ShaderResource> mainShader;
 
 Camera camera;
 
@@ -98,10 +98,13 @@ GameApp::Open()
 	if (this->window->Open())
 	{
 		// INITIALIZE
+		auto time1 = std::chrono::steady_clock::now();
 
 		glClearColor(0.1f,0.1f,0.1f,0.1f);
 
-		mainShader = std::make_shared<ShaderResource>("../projects/vert.glsl");
+		auto resMan = ResourceManager::Instance();
+		resMan->Init();
+		//mainShader = std::make_shared<ShaderResource>("../projects/vert.glsl");
 		//normalShader = ShaderResource("../projects/GLTFnormal/code/vertNormal.glsl");
 
 		// Light 0
@@ -113,21 +116,21 @@ GameApp::Open()
 		// Sun
 		sun = Sun(vec3(0.2, 0.3, 0.5), normalize(vec3(1, -1, 0)), .25);
 
-		BlinnPhongMaterial material;
-		material.LoadShader(mainShader->program);
+		//BlinnPhongMaterial material;
+		//material.LoadShader(mainShader->program);
 
 		//Spawn Genereator
-		SpawnGen::SetProperties(mainShader, &material);
+		SpawnGen::SetProperties();
 		
 		// Player
-		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0, 1));
+		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0.5, 1));
 		p1 = SpawnGen::Instance()->GetPlayer();
 
 		//Enemy
 		SpawnGen::Instance()->SpawnInitEnemy(3);
 
 		//Map
-		mapGenerator.CreateTileMap(mainShader,material);
+		mapGenerator.CreateTileMap();
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -136,21 +139,18 @@ GameApp::Open()
 
 		score.Init(mainShader, material);
 		gameOver.Init(vec3(0, 0, 0), mainShader, material);
-
-		for (auto& gm : Scene::Instance()->GetGameObjVec())
-		{
-			ShaderResource::LinkProgram(
-				mainShader->program, 
-				mainShader->vertexShader, 
-				gm->renderableOBJ.mesh->primitives[0].material.shader
-			);
-		}
+		
+		ShaderResource::LinkProgram(resMan->GetShader()->program, resMan->GetShader()->vertexShader, resMan->GetMaterial().shader);
+		
 
 		printf("Vertex errors:\n");
-		ShaderResource::ErrorLog(mainShader->vertexShader);
+		ShaderResource::ErrorLog(resMan->GetShader()->vertexShader);
 		printf("Fragment errors:\n");
-		ShaderResource::ErrorLog(p1->renderableOBJ.mesh->primitives[0].material.shader);
+		ShaderResource::ErrorLog(resMan->GetMaterial().shader);
 
+		auto time2 = std::chrono::steady_clock::now();
+		auto deltaSeconds = (float)std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count() / 1000000;
+		std::cout << deltaSeconds << " s loading" << std::endl;
 		return true;
 	}
 	return false;
@@ -184,6 +184,8 @@ GameApp::Run()
 	bool hasShot = false;
 	
 	GameState* state = Scene::Instance()->GetGameState();
+
+	auto resMan = ResourceManager::Instance();
 
 	while (this->window->IsOpen())
 	{
@@ -228,6 +230,23 @@ GameApp::Run()
 			if (manager->keyboard.pressed[Input::Key::Return])
 			{
 				useSun = !useSun;
+			gm->Update(deltaSeconds);
+			gm->renderableOBJ.Draw(camera);
+		}
+		
+		camera.Follow(p1->position, deltaSeconds);
+
+		if (!useSun)
+		{
+			sun.Disable(resMan->GetShader());
+			//sun.Disable(normalShader);
+
+			for (auto light : lights)
+			{
+				light.pos = vec3(2*cos(glfwGetTime() + PI * light.index), .5f, 2*sin(glfwGetTime() + PI * light.index));
+				light.Update(resMan->GetShader());
+				//light.Update(normalShader);
+
 			}
 
 			if (manager->mouse.held[Input::MouseButton::right])
@@ -296,6 +315,18 @@ GameApp::Run()
 			break;
 		default:
 			break;
+				light.Disable(resMan->GetShader());
+				//light.Disable(normalShader);
+			}
+
+			if (manager->keyboard.pressed[Input::Key::Up])
+				sun.intensity++;
+			if (manager->keyboard.pressed[Input::Key::Down])
+				sun.intensity--;
+
+			sun.Update(resMan->GetShader());
+			//sun.Update(normalShader);
+
 		}
 
 		

@@ -64,7 +64,7 @@ Window::Window() :
 	window(nullptr),
 	width(1024),
 	height(768),
-	title("gscept Lab Environment")
+	title("Greatest game of all time")
 {
 	// empty
 }

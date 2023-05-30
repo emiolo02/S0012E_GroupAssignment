@@ -22,6 +22,6 @@ public:
 	mat4 view;
 
 private:
-	vec3 followOffset = vec3(0, 7, -4);
+	vec3 followOffset = vec3(0, 5, -2);
 	float dirx, diry;
 };

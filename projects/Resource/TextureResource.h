@@ -23,6 +23,6 @@ public:
 
 	~TextureResource();
 private:
-	//unsigned char* data;
 	std::vector<Texture> textures;
+	//unsigned char* data;
 };

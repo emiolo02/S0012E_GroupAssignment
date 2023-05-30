@@ -1,6 +1,20 @@
 #pragma once
 
 #include "GameObj.h"
+#include "../Light/PointLight.h"
+
+class Gun : public GameObj
+{
+	std::string modelPath;
+	std::string texturePath;
+public:
+	float rotY;
+	Gun();
+
+	void Init();
+	void Update(float dt) override;
+	PointLight flash;
+};
 
 class Player : public GameObj
 {
@@ -30,4 +44,9 @@ private:
 	//input Gamepad
 	vec2 moveInput;
 	vec2 aimInput;
+	
+	vec2i tilePos;
+	vec2 predictedPosition;
+
+	Gun* gun;
 };

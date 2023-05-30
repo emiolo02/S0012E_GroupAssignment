@@ -17,10 +17,10 @@ namespace Input
 		int gp_ID;
 		bool lastBtnVal;
 	public:
-		vec2 leftStick , rightStick;
+		vec2 leftStick, rightStick;
 		bool trigger;
 		Button Abtn;
-		Gamepad(){}
+		Gamepad() {}
 
 		void Update()
 		{
@@ -57,6 +57,10 @@ namespace Input
 		{
 			int count;
 			const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
+
+			if (count == 0)
+				return;
+
 			bool btnVal = (bool)buttons[0];
 			Abtn.pressed = false;
 			Abtn.released = false;
