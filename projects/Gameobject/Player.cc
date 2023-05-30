@@ -52,13 +52,13 @@ Player::Update(float dt)
 	predictedPosition = vec2(position.x, position.z) + moveInput * speed * dt;
 
 	Collision();
-	this->position = vec3(predictedPosition.x, 0, predictedPosition.y);
+	this->position = vec3(predictedPosition.x, position.y, predictedPosition.y);
 
 	renderableOBJ.Translate(position);
 	vec3 aimDir = vec3(aimInput.x, 0, aimInput.y)*10;
 
-	gun->renderableOBJ.Translate(this->position + vec3(aimInput.x, 0.3, aimInput.y)*0.5);
-	gun->renderableOBJ.SetRotationY(atan2(aimInput.x, aimInput.y)*180/PI+90);
+	gun->position = this->position + vec3(aimInput.x, 0.3, aimInput.y)*0.5;
+	gun->rotY = atan2(aimInput.x, aimInput.y)*180/PI+90;
 
 #ifdef DEBUG
 	// Draw debug line
@@ -217,6 +217,10 @@ Gun::Gun()
 {
 	modelPath = "../assets/gun.obj";
 	texturePath = "../assets/black.png";
+	flash = PointLight();
+	flash.color = vec3(1, 1, 0);
+	flash.intensity = 1;
+	flash.index = 2;
 }
 
 void Gun::Init()
@@ -231,6 +235,13 @@ void Gun::Init()
 
 	renderableOBJ.mesh->primitives[0].material = manager->GetMaterial();
 	renderableOBJ.mesh->primitives[0].material.texture = manager->GetTexture(texturePath);
-
 	Scene::Instance()->AddObj(this);
+}
+
+void Gun::Update(float dt)
+{
+	flash.pos = this->position;
+	flash.Update(ResourceManager::Instance()->GetShader());
+	renderableOBJ.Translate(position);
+	renderableOBJ.SetRotationY(rotY);
 }

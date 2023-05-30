@@ -34,7 +34,7 @@ struct Sun
 	vec3 color;
 	float intensity;
 };
-#define POINT_LIGHTS 2
+#define POINT_LIGHTS 3
 uniform PointLight pointLights[POINT_LIGHTS];
 
 uniform Sun sun;
@@ -57,7 +57,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 camPos)
 	
 	// Diffuse
 	vec3 dirToLight = normalize(light.position - fragPos);
-
+	
 	vec3 diffuse = light.color * clamp(dot(dirToLight, normal), 0.0, 1.0);
 	float distance = length(light.position - fragPos);
 	diffuse = diffuse * (1.0 / (1.0 + (0.01 * distance))) * light.intensity;
