@@ -30,7 +30,7 @@ public:
 	void MoveInput(vec2 value);
 	void AimInput(vec2 value);
 	void Die();
-	bool Collision();
+	void Collision();
 	bool Shoot();
 private:
 	//model

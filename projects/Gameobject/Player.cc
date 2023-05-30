@@ -65,17 +65,12 @@ Player::Update(float dt)
 
 	line.setLine(this->position+vec3(0, 0.5, 0), this->position + aimDir + vec3(0, 0.5, 0));
 	
-	mat4 view = Scene::Instance()->GetMainCamera().view;
-	mat4 proj = Scene::Instance()->GetMainCamera().projection;
+	mat4 view = Scene::Instance()->GetMainCamera()->view;
+	mat4 proj = Scene::Instance()->GetMainCamera()->projection;
 
 	line.setMVP(proj * view);
 	line.draw();
 #endif // DEBUG
-}
-bool
-Player::Collision()
-{
-	return false;
 }
 
 void
@@ -98,14 +93,13 @@ Player::AimInput(vec2 value)
 }
 
 
-=======
 void Player::Collision()
 {
 	auto mapDim = Scene::Instance()->GetMapDimensions();
 	auto& mapCol = Scene::Instance()->GetMapColliders();
 #ifdef DEBUG
-	mat4 view = Scene::Instance()->GetMainCamera().view;
-	mat4 proj = Scene::Instance()->GetMainCamera().projection;
+	mat4 view = Scene::Instance()->GetMainCamera()->view;
+	mat4 proj = Scene::Instance()->GetMainCamera()->projection;
 	line.setMVP(proj * view);
 #endif // DEBUG
 
@@ -132,7 +126,7 @@ void Player::Collision()
 
 
 
-				float overlap = 0.25 - length(rayToNearest);
+				float overlap = 0.5 - length(rayToNearest);
 
 				if (length(rayToNearest) == 0)
 					overlap = 0;
@@ -144,7 +138,7 @@ void Player::Collision()
 	}
 }
 
-void
+bool
 Player::Shoot()
 {
 	// Use DDA algorithm to find if ray collides with wall
@@ -224,6 +218,8 @@ Player::Shoot()
 	}
 	if (isHit)
 		closest.object->Destroy();
+
+	return isHit;
 }
 
 Gun::Gun()

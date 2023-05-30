@@ -267,8 +267,8 @@ namespace Debug
     inline
     void DrawCircle(Line& line, vec3 pos, float rad, unsigned int segments)
     {
-        mat4 view = Scene::Instance()->GetMainCamera().view;
-        mat4 proj = Scene::Instance()->GetMainCamera().projection;
+        mat4 view = Scene::Instance()->GetMainCamera()->view;
+        mat4 proj = Scene::Instance()->GetMainCamera()->projection;
         line.setMVP(proj * view);
 
         for (int i = 0; i < segments; i++)

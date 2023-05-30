@@ -15,42 +15,38 @@ Number::ChangeNum(int index)
 	this->renderableOBJ.mesh->primitives[0].material.texture = textures[index%10];
 }
 
-void Number::Init(vec3 pos, std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& mat)
+void Number::Init(vec3 pos)
 {
 	this->screenPos = pos;
+	auto resMan = ResourceManager::Instance();
+	resMan->AddMesh("../assets/plane.obj");
 
-	this->renderableOBJ.SetResources(shader,
-		std::make_shared<MeshResource>(MeshResource::LoadOBJ("../assets/plane.obj")));
+	this->renderableOBJ.SetResources(resMan->GetShader(), resMan->GetMesh("../assets/plane.obj"));
 
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/0.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/1.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/2.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/3.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/4.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/5.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/6.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/7.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/8.png"));
-	textures.push_back(std::make_shared<TextureResource>("../assets/Numbers/9.png"));
+	for (int i = 0; i < 10; i++)
+		resMan->AddTexture("../assets/Numbers/" + std::to_string(i) + ".png");
+	for (int i = 0; i < 10; i++)
+		textures.push_back(resMan->GetTexture("../assets/Numbers/" + std::to_string(i) + ".png"));
 
+	renderableOBJ.mesh->primitives[0].material = resMan->GetMaterial();
+	renderableOBJ.mesh->primitives[0].material.texture = textures[0];
 
-
-	mat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), "../assets/Numbers/0.png");
-	renderableOBJ.mesh->primitives[0].material = mat;
-	renderableOBJ.mesh->Upload();
 	renderableOBJ.Scale(vec3(.07, .07, .07));
 	renderableOBJ.RotateZ(PI);
 	Scene::Instance()->AddObj(this);
 }
 
-void GameOverScreen::Init(vec3 pos, std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& mat)
+void GameOverScreen::Init(vec3 pos)
 {
 	this->position = pos;
-	this->renderableOBJ.SetResources(shader,
-		std::make_shared<MeshResource>(MeshResource::LoadOBJ("../assets/plane.obj")));
-	mat.SetProperties(vec3(1, 1, 1), vec3(1, 1, 1), vec3(1, 1, 1), "../assets/GameOver.png");
-	renderableOBJ.mesh->primitives[0].material = mat;
-	renderableOBJ.mesh->Upload();
+	auto resMan = ResourceManager::Instance();
+	resMan->AddMesh("../assets/plane.obj");
+
+	this->renderableOBJ.SetResources(resMan->GetShader(), resMan->GetMesh("../assets/plane.obj")); 
+	
+	resMan->AddTexture("../assets/GameOver.png");
+	renderableOBJ.mesh->primitives[0].material = resMan->GetMaterial();
+	renderableOBJ.mesh->primitives[0].material.texture = resMan->GetTexture("../assets/GameOver.png");
 	renderableOBJ.Scale(vec3(3, 0, -2));
 }
 

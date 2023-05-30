@@ -1,12 +1,13 @@
 #include "UserInterface.h"
 
 void
-UserInterface::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& mat)
+UserInterface::Init()
 {
+	auto resMan = ResourceManager::Instance();
 	for (int i = 0; i < 3; i++)
 	{
 		Sprite* sprite = new Number();
-		sprite->Init(vec3(-0.5 + 0.077 * i, 0 - 0.01*i, -0.5), shader, mat);
+		sprite->Init(vec3(-0.5 + 0.077 * i, 0 - 0.01*i, -0.5));
 		sprites.push_back(sprite);
 	}
 }

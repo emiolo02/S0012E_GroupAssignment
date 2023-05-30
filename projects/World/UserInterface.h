@@ -8,6 +8,6 @@ class UserInterface
 
 public:
 	int score = 0;
-	void Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial &mat);
+	void Init();
 	void IncScore();
 };
