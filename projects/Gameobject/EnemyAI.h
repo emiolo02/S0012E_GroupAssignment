@@ -17,8 +17,10 @@ class EnemyAI : public GameObj
 
 	BlinnPhongMaterial material;
 	int initSpawnCount;
-
+	Debug::Line line;
 	//offset between the enemies (future)
+	vec2 predictedPosition;
+	vec2i tilePos;
 
 public:
 	//vec3 position;
@@ -31,6 +33,7 @@ public:
 	void Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat);
 
 	void Update(float dt) override;
+	void Collision();
 	void Destroy() override; //deallocate enemy data of the selected enemy
 
 	void SetMaterial(BlinnPhongMaterial* mat);

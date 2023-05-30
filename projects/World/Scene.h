@@ -86,6 +86,21 @@ public:
 	    return enemies;
 	}
 
+    std::vector<bool>& GetMapColliders()
+    {
+        return mapColliders;
+    }
+
+    void SetMapDimensions(unsigned int w, unsigned int h)
+    {
+        mapDim = vec2i(w, h);
+    }
+
+    vec2i GetMapDimensions()
+    {
+        return mapDim;
+    }
+
     //Testing wave count
     int GetWaveCount()
     {
@@ -102,6 +117,9 @@ private:
 	std::vector<GameObj*> gameObjects; //GameOBJ Placeholder //Keep track of all the object in the game
     std::vector<Physics::Collider*> colliders;
     
+    std::vector<bool> mapColliders;
+    vec2i mapDim;
+
     int waveCount = 1; //enemy wave nr
 
     Camera* mainCamera;
@@ -227,4 +245,25 @@ namespace Debug
             return 1;
         }
     };
+
+    inline
+    void DrawCircle(Line& line, vec3 pos, float rad, unsigned int segments)
+    {
+        mat4 view = Scene::Instance()->GetMainCamera().view;
+        mat4 proj = Scene::Instance()->GetMainCamera().projection;
+        line.setMVP(proj * view);
+
+        for (int i = 0; i < segments; i++)
+        {
+            float denominator = float(segments) / 2.0f;
+            vec2 v0 = normalize(vec2(sin(i * PI / denominator), cos(i * PI / denominator)));
+            vec2 v1 = normalize(vec2(sin((i + 1) * PI / denominator), cos((i + 1) * PI / denominator)));
+
+            v0 *= rad;
+            v1 *= rad;
+
+            line.setLine(pos + vec3(v0.x, 0.5f, v0.y), pos + vec3(v1.x, 0.5f, v1.y));
+            line.draw();
+        }
+    }
 }
