@@ -10,10 +10,8 @@ out vec4 outColor;
 out vec2 outTexCoord;
 out vec3 outNormal;
 
+uniform mat4 MVP;
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-uniform vec4 u_position;
 
 void main()
 {
@@ -21,5 +19,5 @@ void main()
 	outTexCoord = texCoord;
 	outNormal = normal; 
 
-	gl_Position = projection * view * model * vec4(position, 1);
+	gl_Position = MVP * vec4(position, 1);
 };

@@ -34,7 +34,7 @@ struct Sun
 	vec3 color;
 	float intensity;
 };
-#define POINT_LIGHTS 3
+#define POINT_LIGHTS 1
 uniform PointLight pointLights[POINT_LIGHTS];
 
 uniform Sun sun;

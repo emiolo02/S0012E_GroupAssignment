@@ -34,6 +34,7 @@ class StaticObj : public GameObj
 public:
 	StaticObj();
 	StaticObj(vec3 pos);
+	~StaticObj();
 	modelP m_Path;
 
 	void Init(

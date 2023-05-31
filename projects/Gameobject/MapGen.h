@@ -12,7 +12,7 @@ class MapGen
 {
 	public:
 		int map_WD, map_HT;
-		std::vector<MapTile*> map;
+		std::vector<StaticObj*> map;
 		 
 		MapGen() {}
 		~MapGen() {/*Delete the array when exit the game*/ }
@@ -28,23 +28,36 @@ class MapGen
 			{
 				for(int y = 0; y < map_HT; y++)
 				{
-					MapTile* tile = new MapTile(x, y, OPEN);
+					StaticObj* tile = new StaticObj(vec3(x, 0, y));
 					bool createBlockTile = (rand()%15 == 0);
 					if(createBlockTile)
 					{
-						tile->SetType(BLOCKED);
 						//Create building static mesh 
-						tile->GenerateStaticOBJ(tile->position, 1);
+						tile->Init(1);
 						worldMap[x + y * map_WD] = true;
 					}
 					else
 					{
 						//Create walkable space
-						tile->GenerateStaticOBJ(tile->position, 0);
+						tile->Init(0);
 					}
 
 					map.push_back(tile);
 				}
 			}
+		}
+
+		void Reset()
+		{
+			for (auto& tile : map)
+			{
+				tile->~StaticObj();
+			}
+
+			map.resize(0);
+			Scene::Instance()->GetMapColliders().resize(0);
+			Scene::Instance()->SetMapDimensions(0, 0);
+
+			CreateTileMap();
 		}
 };

@@ -54,11 +54,12 @@ Player::Update(float dt)
 	Collision();
 	this->position = vec3(predictedPosition.x, position.y, predictedPosition.y);
 
-	renderableOBJ.Translate(position);
+	renderableOBJ.SetModel(position, rotation, scale);
 	vec3 aimDir = vec3(aimInput.x, 0, aimInput.y)*10;
 
 	gun->position = this->position + vec3(aimInput.x, 0.3, aimInput.y)*0.5;
-	gun->rotY = atan2(aimInput.x, aimInput.y)*180/PI+90;
+	gun->rotation.y = atan2(aimInput.x, aimInput.y)+PI/2;
+	gun->dir = vec3(aimInput.x, 0, aimInput.y);
 
 #ifdef DEBUG
 	// Draw debug line
@@ -76,6 +77,7 @@ Player::Update(float dt)
 void
 Player::Die()
 {
+	Scene::Instance()->GetMainCamera()->position = vec3(0, 0, 0);
 	Scene::Instance()->SetGameState(GameOver);
 }
 
@@ -95,6 +97,8 @@ Player::AimInput(vec2 value)
 
 void Player::Collision()
 {
+
+	// Collision with map
 	auto mapDim = Scene::Instance()->GetMapDimensions();
 	auto& mapCol = Scene::Instance()->GetMapColliders();
 #ifdef DEBUG
@@ -103,9 +107,9 @@ void Player::Collision()
 	line.setMVP(proj * view);
 #endif // DEBUG
 
-	for (int x = -2; x < 2; x++)
+	for (int x = -1; x < 3; x++)
 	{
-		for (int y = -2; y < 2; y++)
+		for (int y = -1; y < 3; y++)
 		{
 			vec2i cell = vec2i(tilePos.x + x, tilePos.y + y);
 			if (cell.x < 0 || cell.x >= mapDim.x || cell.y < 0 || cell.y >= mapDim.y)
@@ -136,11 +140,22 @@ void Player::Collision()
 			}
 		}
 	}
+
+	// Collision with enemy
+	float closestDist = 9999;
+	for (auto e : Scene::Instance()->GetEnemyVec())
+	{
+		if (length(this->position - e->position) < closestDist)
+			closestDist = length(this->position - e->position);
+	}
+	if (closestDist < 0.5f)
+		Die();
 }
 
 bool
 Player::Shoot()
 {
+	gun->Shoot();
 	// Use DDA algorithm to find if ray collides with wall
 	vec2 rayStart = vec2(this->position.x, this->position.z);
 
@@ -227,9 +242,9 @@ Gun::Gun()
 	modelPath = "../assets/gun.obj";
 	texturePath = "../assets/black.png";
 	flash = PointLight();
-	flash.color = vec3(1, 1, 0);
+	flash.color = vec3(1, 1, .7);
 	flash.intensity = 1;
-	flash.index = 2;
+	flash.index = 0;
 }
 
 void Gun::Init()
@@ -249,8 +264,14 @@ void Gun::Init()
 
 void Gun::Update(float dt)
 {
-	flash.pos = this->position;
+	flash.pos = this->position + dir*0.5;
+	//renderableOBJ.Translate(position);
+	//renderableOBJ.SetRotationY(rotY);
+	renderableOBJ.SetModel(position, rotation, scale);
+}
+
+void Gun::Shoot()
+{
 	flash.Update(ResourceManager::Instance()->GetShader());
-	renderableOBJ.Translate(position);
-	renderableOBJ.SetRotationY(rotY);
+
 }

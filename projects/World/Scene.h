@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ResourceManager.h"
+#include <algorithm>
 
 class GameObj; //Forward declare
 class Camera;
@@ -116,6 +117,11 @@ public:
     void incrementWave()
     {
         waveCount++;
+    }
+
+    void ResetWave()
+    {
+        waveCount = 1;
     }
 
     GameState* GetGameState()

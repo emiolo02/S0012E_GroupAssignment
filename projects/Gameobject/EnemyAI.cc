@@ -22,6 +22,7 @@ EnemyAI::Destroy()
 	Scene::Instance()->DestroyObj(this);
 	Scene::Instance()->DestroyEnemy(this);
 	Scene::Instance()->DestroyCollider(&this->collider);
+	delete this;
 }
 
 //Init data for the GraphicsNode 
@@ -38,7 +39,7 @@ void EnemyAI::Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& e
 	renderableOBJ.mesh->primitives[0].material = manager->GetMaterial();
 	renderableOBJ.mesh->primitives[0].material.texture = manager->GetTexture(texturePath);
 
-	renderableOBJ.Translate(position);
+	renderableOBJ.SetModel(position, rotation, scale);
 
 	collider = Physics::CircleCollider(vec2(position.x, position.z), 0.5f, this);
 
@@ -61,9 +62,9 @@ void EnemyAI::Update(float dt)
 	tilePos = vec2i(this->position.x, this->position.z);
 	Collision();
 
-	this->position = vec3(predictedPosition.x, 0, predictedPosition.y);
+	this->position = vec3(predictedPosition.x, this->position.y, predictedPosition.y);
 	collider.position = vec2(position.x, position.z);
-	renderableOBJ.Translate(this->position);
+	renderableOBJ.SetModel(position, rotation, scale);
 
 #ifdef DEBUG
 	Debug::DrawCircle(line, this-> position, collider.radius);

@@ -2,17 +2,19 @@
 
 #include "GameObj.h"
 #include "../Light/PointLight.h"
+#include "EnemyAI.h"
 
 class Gun : public GameObj
 {
 	std::string modelPath;
 	std::string texturePath;
 public:
-	float rotY;
+	vec3 dir;
 	Gun();
 
 	void Init();
 	void Update(float dt) override;
+	void Shoot();
 	PointLight flash;
 };
 

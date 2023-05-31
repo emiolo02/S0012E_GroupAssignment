@@ -5,13 +5,14 @@ enum Projection
 	persp,
 	ortho
 };
+
 class Camera
 {
 public:
 	Camera();
 	void FreeFly(vec3 input, float dMouseX, float dMouseY, float speed);
 	void Orbit(float speed, float radius, float height, float time);
-	void Follow(vec3 target, float dt);
+	void Follow(vec3 target, vec3 offset, float dt);
 	void ChangePerspective(Projection proj);
 	vec3 up;
 	vec3 right;
@@ -21,7 +22,16 @@ public:
 	mat4 projection;
 	mat4 view;
 
-private:
-	vec3 followOffset = vec3(0, 5, -2);
+	mat4 projView;
+	
+	struct ViewCutoff
+	{
+		float nX;
+		float pX;
+		float nY;
+		float pY;
+	};
+	ViewCutoff viewCut;
+private:	
 	float dirx, diry;
 };
