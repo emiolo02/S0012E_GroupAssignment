@@ -22,6 +22,7 @@ EnemyAI::Destroy()
 	Scene::Instance()->DestroyObj(this);
 	Scene::Instance()->DestroyEnemy(this);
 	Scene::Instance()->DestroyCollider(&this->collider);
+	delete this;
 }
 
 //Init data for the GraphicsNode 

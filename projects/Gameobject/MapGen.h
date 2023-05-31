@@ -57,6 +57,7 @@ class MapGen
 			map.resize(0);
 			Scene::Instance()->GetMapColliders().resize(0);
 			Scene::Instance()->SetMapDimensions(0, 0);
+
 			CreateTileMap();
 		}
 };

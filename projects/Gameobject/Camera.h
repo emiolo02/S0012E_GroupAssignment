@@ -12,7 +12,7 @@ public:
 	Camera();
 	void FreeFly(vec3 input, float dMouseX, float dMouseY, float speed);
 	void Orbit(float speed, float radius, float height, float time);
-	void Follow(vec3 target, float dt);
+	void Follow(vec3 target, vec3 offset, float dt);
 	void ChangePerspective(Projection proj);
 	vec3 up;
 	vec3 right;
@@ -32,8 +32,6 @@ public:
 		float pY;
 	};
 	ViewCutoff viewCut;
-private:
-	vec3 followOffset = vec3(0, 5, -1);
-	
+private:	
 	float dirx, diry;
 };

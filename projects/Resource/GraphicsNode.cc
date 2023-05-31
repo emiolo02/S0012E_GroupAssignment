@@ -88,11 +88,12 @@ GraphicsNode::SetRotMat(const mat4& m)
 
 void GraphicsNode::SetModel(vec3 pos, vec3 rot, vec3 scale)
 {
-	this->model =mat4(
-		vec4(scale.x, 0, 0, 0),
+	// Only able to rotate along y axis
+	this->model = mat4(
+		vec4(scale.x * cos(rot.y), 0, -sin(rot.y) * scale.x, 0),
 		vec4(0, scale.y, 0, 0),
-		vec4(0, 0, scale.z, 0),
-		vec4(pos.x, pos.y, pos.z, 1));
+		vec4(sin(rot.y)*scale.z, 0, scale.z * cos(rot.y), 0),
+		vec4(pos.x, pos.y, pos.z, 1)) ;
 }
 
 void

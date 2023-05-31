@@ -58,7 +58,8 @@ Player::Update(float dt)
 	vec3 aimDir = vec3(aimInput.x, 0, aimInput.y)*10;
 
 	gun->position = this->position + vec3(aimInput.x, 0.3, aimInput.y)*0.5;
-	gun->rotY = atan2(aimInput.x, aimInput.y)*180/PI+90;
+	gun->rotation.y = atan2(aimInput.x, aimInput.y)+PI/2;
+	gun->dir = vec3(aimInput.x, 0, aimInput.y);
 
 #ifdef DEBUG
 	// Draw debug line
@@ -76,6 +77,7 @@ Player::Update(float dt)
 void
 Player::Die()
 {
+	Scene::Instance()->GetMainCamera()->position = vec3(0, 0, 0);
 	Scene::Instance()->SetGameState(GameOver);
 }
 
@@ -153,6 +155,7 @@ void Player::Collision()
 bool
 Player::Shoot()
 {
+	gun->Shoot();
 	// Use DDA algorithm to find if ray collides with wall
 	vec2 rayStart = vec2(this->position.x, this->position.z);
 
@@ -239,9 +242,9 @@ Gun::Gun()
 	modelPath = "../assets/gun.obj";
 	texturePath = "../assets/black.png";
 	flash = PointLight();
-	flash.color = vec3(1, 1, 1);
-	flash.intensity = -0.5;
-	flash.index = 2;
+	flash.color = vec3(1, 1, .7);
+	flash.intensity = 1;
+	flash.index = 0;
 }
 
 void Gun::Init()
@@ -261,9 +264,14 @@ void Gun::Init()
 
 void Gun::Update(float dt)
 {
-	flash.pos = this->position;
-	flash.Update(ResourceManager::Instance()->GetShader());
+	flash.pos = this->position + dir*0.5;
 	//renderableOBJ.Translate(position);
 	//renderableOBJ.SetRotationY(rotY);
 	renderableOBJ.SetModel(position, rotation, scale);
+}
+
+void Gun::Shoot()
+{
+	flash.Update(ResourceManager::Instance()->GetShader());
+
 }

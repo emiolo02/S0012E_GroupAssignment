@@ -6,7 +6,7 @@ Number::Update(float dt)
 	Camera* cam = Scene::Instance()->GetMainCamera();
 	this->position = cam->position + cam->direction + screenPos;
 
-	renderableOBJ.SetModel(this->position, vec3(0, 0, 0), vec3());
+	renderableOBJ.SetModel(this->position, vec3(), vec3(-0.07, -0.07, 0.07));
 }
 
 void 
@@ -47,7 +47,7 @@ void GameOverScreen::Init(vec3 pos)
 	resMan->AddTexture("../assets/GameOver.png");
 	renderableOBJ.mesh->primitives[0].material = resMan->GetMaterial();
 	renderableOBJ.mesh->primitives[0].material.texture = resMan->GetTexture("../assets/GameOver.png");
-	renderableOBJ.Scale(vec3(3, 0, -2));
+	renderableOBJ.SetModel(vec3(), vec3(0, PI/2, 0), vec3(3, 1, -2));
 }
 
 void GameOverScreen::Reset()

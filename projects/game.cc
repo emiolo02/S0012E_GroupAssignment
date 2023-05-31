@@ -33,8 +33,6 @@ UserInterface score;
 
 GameOverScreen gameOver;
 
-std::vector<PointLight> lights;
-
 Sun sun;
 
 Input::InputManager* manager = manager->Instance();
@@ -104,22 +102,11 @@ GameApp::Open()
 
 		auto resMan = ResourceManager::Instance();
 		resMan->Init();
-		//mainShader = std::make_shared<ShaderResource>("../projects/vert.glsl");
-		//normalShader = ShaderResource("../projects/GLTFnormal/code/vertNormal.glsl");
 
-		// Light 0
-		lights.push_back(PointLight(vec3(0, 0, -2), vec3(1, 0.1, 0.1), 1, 0));
-
-		// Light 1
-		lights.push_back(PointLight(vec3(0, 0, 2), vec3(0.1, 0.1, 1), 2, 1));
 
 		// Sun
-		sun = Sun(vec3(0.2, 0.3, 0.5), normalize(vec3(1, -1, 0)), .25);
-
-		//BlinnPhongMaterial material;
-		//material.LoadShader(mainShader->program);
-
-		
+		sun = Sun(vec3(0.3, 0.4, 0.7), normalize(vec3(1, -1, 0)), .4);
+				
 		// Player
 		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0.5, 1));
 		p1 = SpawnGen::Instance()->GetPlayer();
@@ -175,7 +162,6 @@ GameApp::Run()
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(0);
 
-	bool useSun = false;
 	float deltaSeconds = 0;
 	vec2 inputLstick;
 	vec2 inputRstick;
@@ -184,6 +170,7 @@ GameApp::Run()
 	auto resMan = ResourceManager::Instance();
 	auto gameState = Scene::Instance()->GetGameState();
 
+	sun.Update(resMan->GetShader());
 	while (this->window->IsOpen())
 	{
 		// Calculate dt
@@ -220,12 +207,7 @@ GameApp::Run()
 
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if (manager->keyboard.pressed[Input::Key::Return])
-		{
-			useSun = !useSun;
-		}
-
+		ShaderResource::Vector3f("cameraPos", camera.position, resMan->GetShader()->program);
 
 		//if (manager->mouse.held[Input::MouseButton::right])
 		//	camera.FreeFly(vec3(right, up, forward), manager->mouse.dx, manager->mouse.dy, 0.05);
@@ -241,7 +223,7 @@ GameApp::Run()
 				p1->AimInput(inputRstick);
 
 
-				if (manager->gamepad.trigger && !hasShot)
+				if (manager->gamepad.trigger)
 					if (p1->Shoot())
 						score.IncScore();
 
@@ -268,41 +250,12 @@ GameApp::Run()
 					gm->renderableOBJ.Draw(camera);
 				}
 
-				camera.Follow(p1->position, deltaSeconds);
+				camera.Follow(p1->position, vec3(0, 4, -1), deltaSeconds);
 
-				if (!useSun)
-				{
-					sun.Disable(resMan->GetShader());
-					//sun.Disable(normalShader);
-
-					for (auto light : lights)
-					{
-						light.pos = vec3(2 * cos(glfwGetTime() + PI * light.index), .5f, 2 * sin(glfwGetTime() + PI * light.index));
-						light.Update(resMan->GetShader());
-						//light.Update(normalShader);
-					}
-				}
-				else
-				{
-					for (auto light : lights)
-					{
-						light.Disable(resMan->GetShader());
-						//light.Disable(normalShader);
-					}
-
-					if (manager->keyboard.pressed[Input::Key::Up])
-						sun.intensity++;
-					if (manager->keyboard.pressed[Input::Key::Down])
-						sun.intensity--;
-
-					sun.Update(resMan->GetShader());
-					//sun.Update(normalShader);
-				}
 			break;
 			case GameState::GameOver:
-				camera.position = vec3(0, 1, 0);
+				camera.Follow(vec3(), vec3(0, 1, 0), deltaSeconds);
 				camera.ChangePerspective(Projection::ortho);
-				camera.view = lookat(camera.position, vec3(0, 0, 0), vec3(0, 0, -1));
 				gameOver.Draw(camera);
 
 				if (manager->gamepad.Abtn.pressed)
