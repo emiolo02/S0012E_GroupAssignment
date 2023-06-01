@@ -3,10 +3,13 @@
 void
 Number::Update(float dt)
 {
+	if (!active)
+		return;
+
 	Camera* cam = Scene::Instance()->GetMainCamera();
 	this->position = cam->position + cam->direction + screenPos;
 
-	renderableOBJ.SetModel(this->position, vec3(), vec3(-0.07, -0.07, 0.07));
+	renderableOBJ.SetModel(this->position, vec3(), scale);
 }
 
 void 
@@ -31,7 +34,7 @@ void Number::Init(vec3 pos)
 	renderableOBJ.mesh->primitives[0].material = resMan->GetMaterial();
 	renderableOBJ.mesh->primitives[0].material.texture = textures[0];
 
-	renderableOBJ.Scale(vec3(.07, .07, .07));
+	this->scale = vec3(-.07, .07, .07);
 	renderableOBJ.RotateZ(PI);
 	Scene::Instance()->AddObj(this);
 }

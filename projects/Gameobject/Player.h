@@ -36,7 +36,9 @@ public:
 	void Collision();
 	bool Shoot();
 	bool shoot;
+	bool isDead = false;
 	float timer = 0;
+
 private:
 	//model
 	std::string modelPath;

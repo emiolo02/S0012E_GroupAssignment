@@ -110,7 +110,7 @@ GameApp::Open()
 		// Player
 		SpawnGen::Instance()->SpawnInitPlayer(vec3(25, 0.5, 25));
 		p1 = SpawnGen::Instance()->GetPlayer();
-		score.Init();
+		score.Init(gameOver);
 		gameOver.Init(vec3(0, 0, 0));
 
 		//Map
@@ -257,12 +257,19 @@ GameApp::Run()
 
 				camera.Follow(p1->position, vec3(0, 4, -1), deltaSeconds);
 
+				if (p1->isDead)
+				{
+					Scene::Instance()->SetGameState(GameOver);
+					score.LoadHighscore();
+				}
 			break;
 			case GameState::GameOver:
 				camera.position = vec3(0, 1, 0);
 				//camera.view = lookat(camera.position, vec3(0, 0, 0), vec3(0, 0, 1));
 				camera.Follow(vec3(0, -1, 0), vec3(0, 2, -.1), deltaSeconds);
 				gameOver.Draw(camera);
+				score.DrawHighscore();
+
 				camera.ChangePerspective(Projection::ortho);
 
 				if (manager->gamepad.Abtn.pressed)
@@ -278,8 +285,10 @@ GameApp::Run()
 					SpawnGen::Instance()->ResetSpawnCount();
 
 					p1->position = vec3(25, 0.5, 25);
-
+					p1->isDead = false;
 					camera.ChangePerspective(Projection::persp);
+					score.Reset();
+					gameOver.Reset();
 					mapGenerator.Reset();
 					*gameState = GameState::Active;
 				}

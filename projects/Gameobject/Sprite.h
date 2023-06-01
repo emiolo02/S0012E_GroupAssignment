@@ -5,8 +5,9 @@
 class Sprite : public GameObj
 {
 protected:
-	vec3 screenPos;
 public:
+	bool active = true;
+	vec3 screenPos;
 	Sprite() {}
 	virtual void Init(vec3 pos) {}
 	virtual void ChangeNum(int index) {}

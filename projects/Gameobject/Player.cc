@@ -85,8 +85,7 @@ Player::Update(float dt)
 void
 Player::Die()
 {
-	Scene::Instance()->GetMainCamera()->position = vec3(0, 0, 0);
-	Scene::Instance()->SetGameState(GameOver);
+	isDead = true;
 }
 
 void 
