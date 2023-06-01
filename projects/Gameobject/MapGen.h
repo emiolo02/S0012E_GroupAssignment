@@ -29,8 +29,16 @@ class MapGen
 				for(int y = 0; y < map_HT; y++)
 				{
 					StaticObj* tile = new StaticObj(vec3(x, 0, y));
+
+					if (x > 23 && x <= 26 && y > 23 && y <= 26)
+					{
+						tile->Init(0);
+						map.push_back(tile);
+						continue;
+					}
+
 					bool createBlockTile = (rand()%15 == 0);
-					if(createBlockTile)
+					if(createBlockTile || x == 0 || x == map_WD - 1 || y == 0 || y == map_HT - 1)
 					{
 						//Create building static mesh 
 						tile->Init(1);
@@ -51,7 +59,7 @@ class MapGen
 		{
 			for (auto& tile : map)
 			{
-				tile->~StaticObj();
+				tile->Destroy();
 			}
 
 			map.resize(0);

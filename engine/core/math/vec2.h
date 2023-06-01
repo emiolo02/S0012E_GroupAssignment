@@ -167,6 +167,14 @@ public:
 	}
 
 	//Operator overloads
+	vec2i& operator=(vec2i const& rhs)
+	{
+		this->x = rhs.x;
+		this->y = rhs.y;
+
+		return *this;
+	}
+
 	vec2i& operator=(vec2 const& rhs)
 	{
 		this->x = rhs.x;

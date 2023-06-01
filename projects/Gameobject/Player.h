@@ -9,12 +9,13 @@ class Gun : public GameObj
 	std::string modelPath;
 	std::string texturePath;
 public:
+	bool activateFlash;
 	vec3 dir;
 	Gun();
 
 	void Init();
 	void Update(float dt) override;
-	void Shoot();
+	void Flash();
 	PointLight flash;
 };
 
@@ -34,6 +35,8 @@ public:
 	void Die();
 	void Collision();
 	bool Shoot();
+	bool shoot;
+	float timer = 0;
 private:
 	//model
 	std::string modelPath;

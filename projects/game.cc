@@ -106,18 +106,19 @@ GameApp::Open()
 
 		// Sun
 		sun = Sun(vec3(0.3, 0.4, 0.7), normalize(vec3(1, -1, 0)), .4);
-				
+		
 		// Player
-		SpawnGen::Instance()->SpawnInitPlayer(vec3(3, 0.5, 1));
+		SpawnGen::Instance()->SpawnInitPlayer(vec3(25, 0.5, 25));
 		p1 = SpawnGen::Instance()->GetPlayer();
 		score.Init();
 		gameOver.Init(vec3(0, 0, 0));
 
+		//Map
+		mapGenerator.CreateTileMap();
+
 		//Enemy
 		SpawnGen::Instance()->SpawnInitEnemy(3);
 
-		//Map
-		mapGenerator.CreateTileMap();
 
 		// Camera
 		camera.position = vec3(-2, 2, -2);
@@ -223,11 +224,15 @@ GameApp::Run()
 				p1->AimInput(inputRstick);
 
 
-				if (manager->gamepad.trigger)
+				if (manager->gamepad.bump.pressed)
+				{
+					p1->timer = 0;
+					p1->shoot = true;
 					if (p1->Shoot())
 						score.IncScore();
-
-				hasShot = manager->gamepad.trigger;
+				}
+				else
+					p1->shoot = false;
 				//p1.Update(deltaSeconds);
 
 				if (Scene::Instance()->GetEnemyVec().size() == 0)
@@ -254,21 +259,25 @@ GameApp::Run()
 
 			break;
 			case GameState::GameOver:
-				camera.Follow(vec3(), vec3(0, 1, 0), deltaSeconds);
-				camera.ChangePerspective(Projection::ortho);
+				camera.position = vec3(0, 1, 0);
+				//camera.view = lookat(camera.position, vec3(0, 0, 0), vec3(0, 0, 1));
+				camera.Follow(vec3(0, -1, 0), vec3(0, 2, -.1), deltaSeconds);
 				gameOver.Draw(camera);
+				camera.ChangePerspective(Projection::ortho);
 
 				if (manager->gamepad.Abtn.pressed)
 				{
 					auto scene = Scene::Instance();
 
 					for (auto e : scene->GetEnemyVec())
+					{
 						e->Destroy();
+					}
 
 					scene->ResetWave();
 					SpawnGen::Instance()->ResetSpawnCount();
 
-					p1->position = vec3(3, 0.5, 1);
+					p1->position = vec3(25, 0.5, 25);
 
 					camera.ChangePerspective(Projection::persp);
 					mapGenerator.Reset();

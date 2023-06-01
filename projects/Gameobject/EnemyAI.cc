@@ -16,13 +16,16 @@ EnemyAI::EnemyAI(vec3 startPos, vec3& target)
 	texturePath = "../assets/angrysmile.png";
 	modelPath = "../assets/cylinder.obj";
 }
+
+EnemyAI::~EnemyAI()
+{
+}
 void
 EnemyAI::Destroy()
 {
-	Scene::Instance()->DestroyObj(this);
 	Scene::Instance()->DestroyEnemy(this);
 	Scene::Instance()->DestroyCollider(&this->collider);
-	delete this;
+	Scene::Instance()->DestroyObj(this);
 }
 
 //Init data for the GraphicsNode 

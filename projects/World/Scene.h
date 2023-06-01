@@ -41,7 +41,8 @@ public:
     {
         auto it = std::find(gameObjects.begin(), gameObjects.end(), gm);
         if (it != gameObjects.end())
-        gameObjects.erase(it);
+            gameObjects.erase(it);
+        delete gm;
     }
 
 	void AddEnemies(EnemyAI* agent)
@@ -54,6 +55,7 @@ public:
         auto it = std::find(enemies.begin(),enemies.end(), e);
         if (it != enemies.end())
             enemies.erase(it);
+        //delete e;
     }
 
 	std::vector<GameObj*> GetGameObjVec()
