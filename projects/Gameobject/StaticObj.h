@@ -35,8 +35,10 @@ public:
 	StaticObj();
 	StaticObj(vec3 pos);
 	~StaticObj();
+
 	modelP m_Path;
 
+	void Destroy() override;
 	void Init(
 		std::string modelPath, 
 		std::string texturePath, 

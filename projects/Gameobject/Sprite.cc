@@ -47,7 +47,7 @@ void GameOverScreen::Init(vec3 pos)
 	resMan->AddTexture("../assets/GameOver.png");
 	renderableOBJ.mesh->primitives[0].material = resMan->GetMaterial();
 	renderableOBJ.mesh->primitives[0].material.texture = resMan->GetTexture("../assets/GameOver.png");
-	renderableOBJ.SetModel(vec3(), vec3(0, PI/2, 0), vec3(3, 1, -2));
+	renderableOBJ.SetModel(vec3(0, -1, 0), vec3(0, PI, 0), vec3(4, 1, -3));
 }
 
 void GameOverScreen::Reset()

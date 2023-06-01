@@ -12,6 +12,11 @@ StaticObj::StaticObj(vec3 pos)
 
 StaticObj::~StaticObj()
 {
+}
+
+void
+StaticObj::Destroy()
+{
 	Scene::Instance()->DestroyObj(this);
 }
 

@@ -23,9 +23,32 @@ public:
 	void SpawnInitEnemy(int count)
 	{
 		e_spawnCount = count;
+		auto mapCol = Scene::Instance()->GetMapColliders();
+		auto mapDim = Scene::Instance()->GetMapDimensions();
 		for(int i= 0; i < e_spawnCount; i++)
 		{
-			EnemyAI* enemy = new EnemyAI(vec3(rand() % 5, 0.5, rand() % 10), p_Ref->position);
+			float denominator = float(e_spawnCount) / 2.0f;
+			vec2 v0 = normalize(vec2(sin(i * PI / denominator), cos(i * PI / denominator)));
+			v0 *= 7;
+			vec2i vi;
+			vi.x = v0.x + p_Ref->position.x;
+			vi.y = v0.y + p_Ref->position.z;
+			while (mapCol[vi.x + vi.y * mapDim.y])
+			{
+				vi.x += rand() % 3 - 1;
+				vi.y += rand() % 3 - 1;
+			}
+
+			if (vi.x > mapDim.x - 2)
+				vi.x = mapDim.x - 2;
+			if (vi.x < 0)
+				vi.x = 1;
+
+			if (vi.y > mapDim.y - 2)
+				vi.y = mapDim.y - 2;
+			if (vi.y <= 0)
+				vi.y = 1;
+			EnemyAI* enemy = new EnemyAI(vec3(vi.x, 0.5, vi.y), p_Ref->position);
 			enemy->Init(shaderPGR, entity_mat);
 		}
 	}

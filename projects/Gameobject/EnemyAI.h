@@ -29,6 +29,7 @@ public:
 
 	EnemyAI();
 	EnemyAI(vec3 startPos,vec3& target);
+	~EnemyAI();
 
 	void Init(std::shared_ptr<ShaderResource> shader, BlinnPhongMaterial& playerMat);
 

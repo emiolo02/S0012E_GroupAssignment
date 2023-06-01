@@ -29,10 +29,11 @@ void PointLight::Update(std::shared_ptr<ShaderResource> shader)
 void 
 PointLight::Disable(std::shared_ptr<ShaderResource> shader)
 {
-	std::string colName = "pointLights[" + std::to_string(this->index) + "].color";
 	std::string intName = "pointLights[" + std::to_string(this->index) + "].intensity";
+	std::string colName = "pointLights[" + std::to_string(this->index) + "].color";
+
 
 	glUseProgram(shader->program);
-	shader->Vector3f(colName.c_str(), vec3(), shader->program);
 	shader->uFloat(intName.c_str(), 0, shader->program);
+	shader->Vector3f(colName.c_str(), vec3(), shader->program);
 }

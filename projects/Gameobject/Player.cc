@@ -60,6 +60,14 @@ Player::Update(float dt)
 	gun->position = this->position + vec3(aimInput.x, 0.3, aimInput.y)*0.5;
 	gun->rotation.y = atan2(aimInput.x, aimInput.y)+PI/2;
 	gun->dir = vec3(aimInput.x, 0, aimInput.y);
+	
+	timer += dt;
+	if (timer < 0.1)
+	{
+		gun->activateFlash = true;
+	}
+	else
+		gun->activateFlash = false;
 
 #ifdef DEBUG
 	// Draw debug line
@@ -155,7 +163,6 @@ void Player::Collision()
 bool
 Player::Shoot()
 {
-	gun->Shoot();
 	// Use DDA algorithm to find if ray collides with wall
 	vec2 rayStart = vec2(this->position.x, this->position.z);
 
@@ -232,7 +239,10 @@ Player::Shoot()
 		}
 	}
 	if (isHit)
+	{
 		closest.object->Destroy();
+		//delete closest.object;
+	}
 
 	return isHit;
 }
@@ -243,7 +253,7 @@ Gun::Gun()
 	texturePath = "../assets/black.png";
 	flash = PointLight();
 	flash.color = vec3(1, 1, .7);
-	flash.intensity = 1;
+	flash.intensity = 0.3;
 	flash.index = 0;
 }
 
@@ -264,14 +274,15 @@ void Gun::Init()
 
 void Gun::Update(float dt)
 {
+	Flash();
 	flash.pos = this->position + dir*0.5;
-	//renderableOBJ.Translate(position);
-	//renderableOBJ.SetRotationY(rotY);
 	renderableOBJ.SetModel(position, rotation, scale);
 }
 
-void Gun::Shoot()
+void Gun::Flash()
 {
-	flash.Update(ResourceManager::Instance()->GetShader());
-
+	if (activateFlash)
+		flash.Update(ResourceManager::Instance()->GetShader());
+	else
+		flash.Disable(ResourceManager::Instance()->GetShader());
 }

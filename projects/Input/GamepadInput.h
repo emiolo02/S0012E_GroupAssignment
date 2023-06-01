@@ -16,10 +16,13 @@ namespace Input
 	{
 		int gp_ID;
 		bool lastBtnVal;
+		bool lastBumpVal;
 	public:
 		vec2 leftStick, rightStick;
 		bool trigger;
 		Button Abtn;
+		Button bump;
+
 		Gamepad() {}
 
 		void Update()
@@ -50,7 +53,7 @@ namespace Input
 			if (length(rawRstick) > deadzone)
 				rightStick = rawRstick;
 
-			trigger = (axes[4] > 0.5 || axes[5] > 0.5);
+			//trigger = (axes[4] > 0.5 || axes[5] > 0.5);
 		}
 
 		void ActionValue()
@@ -76,8 +79,24 @@ namespace Input
 			Abtn.held = btnVal;
 			lastBtnVal = btnVal;
 
-			if (!trigger)
-				trigger = ((bool)buttons[6] || (bool)buttons[7]);
+
+			bool bumpVal = ((bool)buttons[4] || (bool)buttons[5]);
+			bump.pressed = false;
+			bump.released = false;
+
+			if (bumpVal && !lastBumpVal)
+			{
+				bump.pressed = true;
+			}
+			if (!bumpVal && lastBtnVal)
+			{
+				bump.released = true;
+			}
+			bump.held = bumpVal;
+			lastBumpVal = bumpVal;
+
+			//if (!trigger)
+			//	trigger = ((bool)buttons[6] || (bool)buttons[7]);
 		}
 	};
 }
