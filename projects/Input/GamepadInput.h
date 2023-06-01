@@ -3,6 +3,17 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 #include "core/math/mat4.h"
+#ifdef __linux__
+#define R_STICK_X 3
+#define R_STICK_Y 4
+
+#else
+#define R_STICK_X 2
+#define R_STICK_Y 3
+
+#endif // __linux__
+
+
 namespace Input
 {
 	struct Button
@@ -42,7 +53,7 @@ namespace Input
 			int axesCount;
 			const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 			vec2 rawLstick = vec2(axes[0], axes[1]);
-			vec2 rawRstick = vec2(axes[2], axes[3]);
+			vec2 rawRstick = vec2(axes[R_STICK_X], axes[R_STICK_Y]);
 
 			leftStick = vec2();
 			rightStick = vec2();
